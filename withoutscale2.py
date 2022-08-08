@@ -12,7 +12,7 @@ from path_is_inpossible import  Ui_Form_Path2
 positions_big = []
 positions_big2 = []
 list_of_obj_from_json = [] #справочник всех известных объектов
-current_level = 0
+current_level = 0 #текущий большой объект
 
 class MyGraphicsView(QtWidgets.QGraphicsView):
     def __init__(self, *args):
