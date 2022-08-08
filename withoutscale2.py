@@ -5,7 +5,7 @@ from mydialog_window import Ui_MyDialog
 from already_exists import Ui_Form
 from dialog_with_obj import Ui_Form2
 from path_is_possible import  Ui_Form_Path
-
+from path_is_inpossible import  Ui_Form_Path2
 
 
 
@@ -102,6 +102,12 @@ class From_path_is_possible(Ui_Form_Path, QtWidgets.QDialog):
         super(From_path_is_possible, self).__init__()
         self.setupUi(self)
         self.setWindowTitle("Успешно!")
+
+class From_path_is_inpossible(Ui_Form_Path2, QtWidgets.QDialog):
+    def __init__(self):
+        super(From_path_is_inpossible, self).__init__()
+        self.setupUi(self)
+        self.setWindowTitle("Предупреждение!")
 
 class MyDialog_big(Ui_Form2, QtWidgets.QDialog):
     def __init__(self):
@@ -454,8 +460,9 @@ class MyMainWindow(QtWidgets.QMainWindow):
             self.btn = QtWidgets.QPushButton("Проверить")
             self.btn.move(50, 370)
             self.btn.resize(100, 30)
-            self.btn.clicked.connect(self.BtnClicked)
+            #self.btn.clicked.connect(self.BtnClicked)
             self.scene.addWidget(self.btn)
+            self.btn.clicked.connect(self.BtnClicked)
             self.newJsonObject()
         else:
             big_circles = Conn.search_for_id(self.list_of_obj, int(id_big))
@@ -531,37 +538,46 @@ class MyMainWindow(QtWidgets.QMainWindow):
                 self.text = str(current_level)
             else:
                 self.text = self.text + "/" + str(current_level)
+
             self.line.setText(self.text)
             self.scene.addWidget(self.line)
             self.btn = QtWidgets.QPushButton("Проверить")
             self.btn.move(50, 370)
             self.btn.resize(100, 30)
-            self.btn.clicked.connect(self.BtnClicked)
             self.scene.addWidget(self.btn)
+            self.btn.clicked.connect(self.BtnClicked)
+
 
 
             self.newJsonObject()
 
 
     def BtnClicked(self):
+        print(33)
         text = self.line.text()
-        text_list = text.split("/")
-        len_list = len(text_list)-1
-        list_result = []
-        for j in range(len_list):
-            flag = 0
-            for i in self.list_of_obj:
+        if text.find("/") != -1:
+            text_list = text.split("/")
+            len_list = len(text_list)-1
+            list_result = []
+            for j in range(len_list):
+                flag = 0
+                for i in self.list_of_obj:
 
-                if int(text_list[j]) == int(i.conn[1].id) and int(text_list[j + 1]) == int(i.conn[0].id):
-                    list_result.append(1)
-                    print("есть совпадение")
-                    break
+                    if int(text_list[j]) == int(i.conn[1].id) and int(text_list[j + 1]) == int(i.conn[0].id):
+                        list_result.append(1)
+                        print("есть совпадение")
+                        break
 
-        if len(list_result) == len_list:
-            path_is_possible = From_path_is_possible()
-            path_is_possible.setGeometry(700, 450, 311, 183)
-            path_is_possible.exec()
-
+            if len(list_result) == len_list:
+                path_is_possible = From_path_is_possible()
+                path_is_possible.setGeometry(700, 450, 311, 183)
+                path_is_possible.exec()
+            else:
+                path_is_inpossible = From_path_is_inpossible()
+                path_is_inpossible.setGeometry(700, 450, 311, 183)
+                path_is_inpossible.exec()
+        else:
+            print("hello")
 
 
 
@@ -703,7 +719,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
                               dial.fromarg[1], dial.fromarg[2])  # добавляем обьект в словарь
                 self.scene.clear()
                 self.initUI(current_level)  # вызываем перерисовку ui
-        else:
+        elif int(item.id) != int(item.id_peretask):
             self.flag_uze_est = 0
             for i in self.list_of_obj:
 
@@ -727,6 +743,11 @@ class MyMainWindow(QtWidgets.QMainWindow):
 
                 self.scene.clear()
                 self.initUI(current_level) #вызываем перерисовку ui
+        else:
+            already_exists = Form_already_exists()
+            #already_exists.setGeometry(600, 350, 311, 183)
+            already_exists.setGeometry(700, 450, 311, 183)
+            already_exists.exec()
 
     def handleSelectIt(self, item):
         print("нажали")
