@@ -4,6 +4,7 @@ from MyItem import MyItem
 from mydialog_window import Ui_MyDialog
 from already_exists import Ui_Form
 from dialog_with_obj import Ui_Form2
+from path_is_possible import  Ui_Form_Path
 
 
 
@@ -96,6 +97,11 @@ class Form_already_exists(Ui_Form, QtWidgets.QDialog):
         self.setupUi(self)
         self.setWindowTitle("Предупреждение!")
 
+class From_path_is_possible(Ui_Form_Path, QtWidgets.QDialog):
+    def __init__(self):
+        super(From_path_is_possible, self).__init__()
+        self.setupUi(self)
+        self.setWindowTitle("Успешно!")
 
 class MyDialog_big(Ui_Form2, QtWidgets.QDialog):
     def __init__(self):
@@ -441,11 +447,15 @@ class MyMainWindow(QtWidgets.QMainWindow):
 
             #buffer_back = self.list_of_obj.copy()
             #self.line.setText(self.text)
-            line = QtWidgets.QLineEdit()
-            line.resize(200, 30)
-            line.move(-400, 370)
-            self.scene.addWidget(line)
-
+            self.line = QtWidgets.QLineEdit()
+            self.line.resize(200, 30)
+            self.line.move(-150, 370)
+            self.scene.addWidget(self.line)
+            self.btn = QtWidgets.QPushButton("Проверить")
+            self.btn.move(50, 370)
+            self.btn.resize(100, 30)
+            self.btn.clicked.connect(self.BtnClicked)
+            self.scene.addWidget(self.btn)
             self.newJsonObject()
         else:
             big_circles = Conn.search_for_id(self.list_of_obj, int(id_big))
@@ -512,15 +522,48 @@ class MyMainWindow(QtWidgets.QMainWindow):
                     n = n + 1
 
             # buffer_back = self.list_of_obj.copy()
-            line = QtWidgets.QLineEdit()
-            line.resize(200, 30)
-            line.move(-400, 370)
-            self.scene.addWidget(line)
-            line.setText(self.text + str(current_level) + "/")
-            self.text = self.text + str(current_level) + "/"
-            self.scene.addWidget(line)
+
+
+            self.line = QtWidgets.QLineEdit()
+            self.line.resize(200, 30)
+            self.line.move(-150, 370)
+            if self.text == "":
+                self.text = str(current_level)
+            else:
+                self.text = self.text + "/" + str(current_level)
+            self.line.setText(self.text)
+            self.scene.addWidget(self.line)
+            self.btn = QtWidgets.QPushButton("Проверить")
+            self.btn.move(50, 370)
+            self.btn.resize(100, 30)
+            self.btn.clicked.connect(self.BtnClicked)
+            self.scene.addWidget(self.btn)
+
 
             self.newJsonObject()
+
+
+    def BtnClicked(self):
+        text = self.line.text()
+        text_list = text.split("/")
+        len_list = len(text_list)-1
+        list_result = []
+        for j in range(len_list):
+            flag = 0
+            for i in self.list_of_obj:
+
+                if int(text_list[j]) == int(i.conn[1].id) and int(text_list[j + 1]) == int(i.conn[0].id):
+                    list_result.append(1)
+                    print("есть совпадение")
+                    break
+
+        if len(list_result) == len_list:
+            path_is_possible = From_path_is_possible()
+            path_is_possible.setGeometry(700, 450, 311, 183)
+            path_is_possible.exec()
+
+
+
 
     def CtrlZ(self):
         self.list_of_obj = []
