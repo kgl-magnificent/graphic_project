@@ -1,5 +1,5 @@
 from PyQt5 import QtCore, QtWidgets, QtGui
-import sys, openpyxl, time, math, codecs, json, copy
+import sys, time, math, codecs, json, copy
 from MyItem import MyItem
 from mydialog_window import Ui_MyDialog
 from already_exists import Ui_Form
@@ -328,9 +328,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
         self.message = " "
         self.text = ""
         self.flag_uze_est = 0
-        self.line = QtWidgets.QLineEdit()
-        self.line.resize(200, 30)
-        self.line.move(-400, 370)
+
         #self.grand_big
         #QtWidgets.QMainWindow.__init__(self, *args, **kwargs)
         #self.scene = QtWidgets.QGraphicsScene()
@@ -442,7 +440,11 @@ class MyMainWindow(QtWidgets.QMainWindow):
                     n = n + 1
 
             #buffer_back = self.list_of_obj.copy()
-            self.scene.addWidget(self.line)
+            #self.line.setText(self.text)
+            line = QtWidgets.QLineEdit()
+            line.resize(200, 30)
+            line.move(-400, 370)
+            self.scene.addWidget(line)
 
             self.newJsonObject()
         else:
@@ -510,7 +512,13 @@ class MyMainWindow(QtWidgets.QMainWindow):
                     n = n + 1
 
             # buffer_back = self.list_of_obj.copy()
-            self.scene.addWidget(self.line)
+            line = QtWidgets.QLineEdit()
+            line.resize(200, 30)
+            line.move(-400, 370)
+            self.scene.addWidget(line)
+            line.setText(self.text + str(current_level) + "/")
+            self.text = self.text + str(current_level) + "/"
+            self.scene.addWidget(line)
 
             self.newJsonObject()
 
@@ -689,12 +697,12 @@ class MyMainWindow(QtWidgets.QMainWindow):
                 break
         if flag == 1:
             self.scene.clear()
-            self.lineAddText(current_level)
+            #self.text = self.text + str(current_level) + "/"
             self.initUI(current_level)
 
-    def lineAddText(self, text):
-        self.text = self.text + str(text) + "/"
-        self.line.setText(self.text)
+    # def lineAddText(self, text):
+    #     self.text = self.text + str(text) + "/"
+    #     self.line.setText(self.text)
 
 
 
