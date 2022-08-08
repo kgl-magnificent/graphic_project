@@ -1,0 +1,223 @@
+[
+    {
+        "connection_id": 0,
+        "connection_type": "additive",
+        "connection_ids": [
+            1,
+            0
+        ],
+        "obj_image": {
+            "type": "circle",
+            "params": {
+                "x": 100.0,
+                "y": 0.0,
+                "radius": 100
+            }
+        },
+        "connection_description": "объекты сцены"
+    },
+    {
+        "connection_id": 1,
+        "connection_type": "additive",
+        "connection_ids": [
+            5,
+            0
+        ],
+        "obj_image": {
+            "type": "circle",
+            "params": {
+                "x": -49.99999999999998,
+                "y": 86.60254037844388,
+                "radius": 100
+            }
+        },
+        "connection_description": "объекты сцены"
+    },
+    {
+        "connection_id": 2,
+        "connection_type": "additive",
+        "connection_ids": [
+            9,
+            0
+        ],
+        "obj_image": {
+            "type": "circle",
+            "params": {
+                "x": -50.00000000000004,
+                "y": -86.60254037844385,
+                "radius": 100
+            }
+        },
+        "connection_description": "объекты сцены"
+    },
+    {
+        "connection_id": 3,
+        "connection_type": "additive",
+        "connection_ids": [
+            2,
+            1
+        ],
+        "obj_image": {
+            "type": "circle",
+            "params": {
+                "x": 30.0,
+                "y": 0.0,
+                "radius": 30
+            }
+        },
+        "connection_description": "объекты алмаз"
+    },
+    {
+        "connection_id": 4,
+        "connection_type": "additive",
+        "connection_ids": [
+            3,
+            1
+        ],
+        "obj_image": {
+            "type": "circle",
+            "params": {
+                "x": -14.999999999999993,
+                "y": 25.98076211353316,
+                "radius": 30
+            }
+        },
+        "connection_description": "объекты алмаз"
+    },
+    {
+        "connection_id": 5,
+        "connection_type": "additive",
+        "connection_ids": [
+            4,
+            1
+        ],
+        "obj_image": {
+            "type": "circle",
+            "params": {
+                "x": -15.000000000000014,
+                "y": -25.980762113533153,
+                "radius": 30
+            }
+        },
+        "connection_description": "объекты алмаз"
+    },
+    {
+        "connection_id": 6,
+        "connection_type": "additive",
+        "connection_ids": [
+            6,
+            5
+        ],
+        "obj_image": {
+            "type": "circle",
+            "params": {
+                "x": 30.0,
+                "y": 0.0,
+                "radius": 30
+            }
+        },
+        "connection_description": "объекты мегаполис"
+    },
+    {
+        "connection_id": 7,
+        "connection_type": "additive",
+        "connection_ids": [
+            7,
+            5
+        ],
+        "obj_image": {
+            "type": "circle",
+            "params": {
+                "x": -14.999999999999993,
+                "y": 25.98076211353316,
+                "radius": 30
+            }
+        },
+        "connection_description": "объекты мегаполис"
+    },
+    {
+        "connection_id": 8,
+        "connection_type": "additive",
+        "connection_ids": [
+            8,
+            5
+        ],
+        "obj_image": {
+            "type": "circle",
+            "params": {
+                "x": -15.000000000000014,
+                "y": -25.980762113533153,
+                "radius": 30
+            }
+        },
+        "connection_description": "объекты мегаполис"
+    },
+    {
+        "connection_id": 10,
+        "connection_type": "additive",
+        "connection_ids": [
+            10,
+            9
+        ],
+        "obj_image": {
+            "type": "circle",
+            "params": {
+                "x": 30.0,
+                "y": 0.0,
+                "radius": 30
+            }
+        },
+        "connection_description": "объекты мцп"
+    },
+    {
+        "connection_id": 11,
+        "connection_type": "additive",
+        "connection_ids": [
+            11,
+            9
+        ],
+        "obj_image": {
+            "type": "circle",
+            "params": {
+                "x": -30.0,
+                "y": 3.67394039744206e-15,
+                "radius": 30
+            }
+        },
+        "connection_description": "объекты мцп"
+    },
+    {
+        "connection_id": 12,
+        "connection_type": "additive",
+        "connection_ids": [
+            12,
+            11
+        ],
+        "obj_image": {
+            "type": "circle",
+            "params": {
+                "x": 0,
+                "y": 0,
+                "radius": 100
+            }
+        },
+        "connection_description": "объекты мцп"
+    },
+    {
+        "connection_id": 13,
+        "connection_type": "additive",
+        "connection_ids": [
+            13,
+            11
+        ],
+        "obj_image": {
+            "type": "circle",
+            "params": {
+                "x": 0,
+                "y": 0,
+                "radius": 100
+            }
+        },
+        "connection_description": "объекты мцп"
+    }
+]
