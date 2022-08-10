@@ -1,5 +1,5 @@
 from PyQt5 import QtCore, QtWidgets, QtGui
-import sys, time, math, codecs, json, copy
+import sys, time, math, codecs, json, copy, os
 from MyItem import MyItem
 from mydialog_window import Ui_MyDialog
 from already_exists import Ui_Form
@@ -301,6 +301,7 @@ class Scene(QtWidgets.QGraphicsScene):
     newBigCircle = QtCore.pyqtSignal(object)
     CtrlZpressed = QtCore.pyqtSignal(object)
     selectedIt = QtCore.pyqtSignal(object)
+    RightButtonClicked = QtCore.pyqtSignal(object)
 
     def __init__(self, *args, **kwargs):
         QtWidgets.QGraphicsScene.__init__(self, *args, **kwargs)
@@ -347,6 +348,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
         self.scene.delobj.connect(self.delObj)
         self.scene.newBigCircle.connect(self.createNewBigCiecle)
         self.scene.CtrlZpressed.connect(self.CtrlZ)
+        self.scene.RightButtonClicked.connect(self.RightButton)
 
 
 
@@ -540,6 +542,12 @@ class MyMainWindow(QtWidgets.QMainWindow):
 
             self.newJsonObject()
 
+
+    def RightButton(self, item):
+        print(item.conn_id)
+        for i in self.list_of_obj:
+            if i.id == item.conn_id:
+                os.startfile(i.path)
 
     def BtnClicked(self):
         print(33)

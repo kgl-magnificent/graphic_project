@@ -27,8 +27,8 @@
         "obj_image": {
             "type": "circle",
             "params": {
-                "x": 6.123233995736766e-15,
-                "y": 100.0,
+                "x": -49.99999999999998,
+                "y": 86.60254037844388,
                 "radius": 100
             }
         },
@@ -45,8 +45,8 @@
         "obj_image": {
             "type": "circle",
             "params": {
-                "x": -100.0,
-                "y": 1.2246467991473532e-14,
+                "x": -50.00000000000004,
+                "y": -86.60254037844383,
                 "radius": 100
             }
         },
@@ -232,23 +232,5 @@
         },
         "connection_description": "объекты мцп",
         "path": 0
-    },
-    {
-        "connection_id": 14,
-        "connection_type": "",
-        "connection_ids": [
-            15,
-            0
-        ],
-        "obj_image": {
-            "type": "circle",
-            "params": {
-                "x": -1.8369701987210297e-14,
-                "y": -100.0,
-                "radius": 100
-            }
-        },
-        "connection_description": "",
-        "path": "C:/Users/User/Documents/GitHub/graphic_project/connections_base2.json"
     }
 ]

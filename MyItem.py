@@ -191,7 +191,7 @@ class MyItem(QtWidgets.QGraphicsItem):
 
     def mousePressEvent(self, event: 'QGraphicsSceneMouseEvent') -> None:
         if event.button() == QtCore.Qt.RightButton:
-            print("нажата права кнопка")
+            self.scene().RightButtonClicked.emit(self)
         else:
             super(MyItem, self).mousePressEvent(event)
 
