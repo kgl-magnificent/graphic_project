@@ -68,5 +68,10 @@
         "obj_id": 13,
         "obj_name": "МЦП-15-5",
         "obj_description": "Изделие ГВМ100/6-410 ЮФКВ.469555.268"
+    },
+    {
+        "obj_id": 15,
+        "obj_name": "connections_base2.json",
+        "obj_description": ""
     }
 ]

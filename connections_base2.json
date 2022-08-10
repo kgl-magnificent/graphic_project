@@ -14,7 +14,8 @@
                 "radius": 100
             }
         },
-        "connection_description": "объекты сцены"
+        "connection_description": "объекты сцены",
+        "path": 0
     },
     {
         "connection_id": 1,
@@ -26,12 +27,13 @@
         "obj_image": {
             "type": "circle",
             "params": {
-                "x": -49.99999999999998,
-                "y": 86.60254037844388,
+                "x": 6.123233995736766e-15,
+                "y": 100.0,
                 "radius": 100
             }
         },
-        "connection_description": "объекты сцены"
+        "connection_description": "объекты сцены",
+        "path": 0
     },
     {
         "connection_id": 2,
@@ -43,12 +45,13 @@
         "obj_image": {
             "type": "circle",
             "params": {
-                "x": -50.00000000000004,
-                "y": -86.60254037844383,
+                "x": -100.0,
+                "y": 1.2246467991473532e-14,
                 "radius": 100
             }
         },
-        "connection_description": "объекты сцены"
+        "connection_description": "объекты сцены",
+        "path": 0
     },
     {
         "connection_id": 3,
@@ -65,7 +68,8 @@
                 "radius": 30
             }
         },
-        "connection_description": "объекты алмаз"
+        "connection_description": "объекты алмаз",
+        "path": 0
     },
     {
         "connection_id": 4,
@@ -82,7 +86,8 @@
                 "radius": 30
             }
         },
-        "connection_description": "объекты алмаз"
+        "connection_description": "объекты алмаз",
+        "path": 0
     },
     {
         "connection_id": 5,
@@ -99,7 +104,8 @@
                 "radius": 30
             }
         },
-        "connection_description": "объекты алмаз"
+        "connection_description": "объекты алмаз",
+        "path": 0
     },
     {
         "connection_id": 6,
@@ -116,7 +122,8 @@
                 "radius": 30
             }
         },
-        "connection_description": "объекты мегаполис"
+        "connection_description": "объекты мегаполис",
+        "path": 0
     },
     {
         "connection_id": 7,
@@ -133,7 +140,8 @@
                 "radius": 30
             }
         },
-        "connection_description": "объекты мегаполис"
+        "connection_description": "объекты мегаполис",
+        "path": 0
     },
     {
         "connection_id": 8,
@@ -150,7 +158,8 @@
                 "radius": 30
             }
         },
-        "connection_description": "объекты мегаполис"
+        "connection_description": "объекты мегаполис",
+        "path": 0
     },
     {
         "connection_id": 10,
@@ -167,7 +176,8 @@
                 "radius": 30
             }
         },
-        "connection_description": "объекты мцп"
+        "connection_description": "объекты мцп",
+        "path": 0
     },
     {
         "connection_id": 11,
@@ -184,7 +194,8 @@
                 "radius": 30
             }
         },
-        "connection_description": "объекты мцп"
+        "connection_description": "объекты мцп",
+        "path": 0
     },
     {
         "connection_id": 12,
@@ -201,7 +212,8 @@
                 "radius": 100
             }
         },
-        "connection_description": "объекты мцп"
+        "connection_description": "объекты мцп",
+        "path": 0
     },
     {
         "connection_id": 13,
@@ -218,6 +230,25 @@
                 "radius": 100
             }
         },
-        "connection_description": "объекты мцп"
+        "connection_description": "объекты мцп",
+        "path": 0
+    },
+    {
+        "connection_id": 14,
+        "connection_type": "",
+        "connection_ids": [
+            15,
+            0
+        ],
+        "obj_image": {
+            "type": "circle",
+            "params": {
+                "x": -1.8369701987210297e-14,
+                "y": -100.0,
+                "radius": 100
+            }
+        },
+        "connection_description": "",
+        "path": "C:/Users/User/Documents/GitHub/graphic_project/connections_base2.json"
     }
 ]

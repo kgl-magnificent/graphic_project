@@ -13,6 +13,7 @@ positions_big = []
 positions_big2 = []
 list_of_obj_from_json = [] #справочник всех известных объектов
 current_level = 0 #текущий большой объект
+new_id = 0
 
 class MyGraphicsView(QtWidgets.QGraphicsView):
     def __init__(self, *args):
@@ -174,13 +175,14 @@ class DataObject:
 
 class Conn:
 
-    def __init__(self, id, type, conn,image, descr):
+    def __init__(self, id, type, conn,image, descr, path = 0):
         self.id = id
         self.type = type
         self.conn = conn
         self.image = image
         self.descr = descr
         self.graph = []
+        self.path = path
 
     def __repr__(self):
         return f'{self.id}, {self.conn}'
@@ -209,17 +211,8 @@ class Conn:
 
     @staticmethod
     def add_conn(list_obj, id_big, id_small, type, descr):
-        # for i in list_obj:
-        #     if i.conn[0].id == id_small:
-        #         id_small = i.conn[0]
-        #         print("что то сделали")
-        #         break
-        #
-        # for j in list_obj:
-        #     if j.conn[1].id == id_big:
-        #         id_big = j.conn[1]
-        #         print("что то снова сделали")
-        #         break
+
+        global new_id
 
         for i in list_of_obj_from_json:
             if i.id == id_small:
@@ -233,25 +226,19 @@ class Conn:
                 print("что то снова сделали")
                 break
 
-        list_obj.append(Conn(len(list_obj)+1, type, [id_small, id_big], {"type": "circle", "params": {"x": 0, "y": 0, "radius":100} }, descr))
+        list_obj.append(Conn(new_id+1, type, [id_small, id_big], {"type": "circle", "params": {"x": 0, "y": 0, "radius":100} }, descr))
+        new_id = new_id + 1
 
     @staticmethod
     def add_conn2(list_obj, id_big, name, type, descr, desc_obj):
 
-
+        global new_id
 
         #id_small = DataObject(Conn.search_maximum(list_obj), name, desc_obj)
         id_small = DataObject(len(list_of_obj_from_json) + 1, name, desc_obj)
         flag_srabotalo = 0
         print("id_small", id_small)
 
-        # for j in list_obj:
-        #     if j.conn[1].id == id_big:
-        #         id_big = j.conn[1]
-        #         print("что то снова сделали")
-        #         flag_srabotalo = 1
-        #         break
-        #
         if flag_srabotalo == 0:
             for j in list_of_obj_from_json:
                 if j.id == id_big:
@@ -262,16 +249,14 @@ class Conn:
         if flag_srabotalo == 0:
             print("все не так")
         list_of_obj_from_json.append(id_small)
-        list_obj.append(Conn(len(list_obj) + 1, type, [id_small, id_big],
+        list_obj.append(Conn(new_id + 1, type, [id_small, id_big],
                              {"type": "circle", "params": {"x": 0, "y": 0, "radius": 100}}, descr))
-        print("flag srabotalo ", flag_srabotalo)
-        print("id_big", id_big)
-        print(list_of_obj_from_json)
+        new_id = new_id + 1
 
 
     @staticmethod
-    def add_conn_big_circle_on_scene(list_obj, id_big, name, type, descr, desc_obj):
-        global list_of_obj_from_json
+    def add_conn_big_circle_on_scene(list_obj, id_big, name, type, descr, desc_obj, path):
+        global list_of_obj_from_json, new_id
         print("add_conn_big_circle_on_scene")
         print(list_of_obj_from_json)
         id_small = DataObject(len(list_of_obj_from_json) + 1, name, desc_obj) #создаем объект
@@ -283,9 +268,10 @@ class Conn:
                 break
 
         list_of_obj_from_json.append(id_small) #добавляем элемент
-        list_obj.append(Conn(len(list_obj) + 1, type, [id_small, id_big],
-                             {"type": "circle", "params": {"x": 0, "y": 0, "radius": 100}}, descr))
+        list_obj.append(Conn(new_id + 1, type, [id_small, id_big],
+                             {"type": "circle", "params": {"x": 0, "y": 0, "radius": 100}}, descr, path))
         print("list_obj", list_obj)
+        new_id = new_id + 1
 
 
     @staticmethod
@@ -534,8 +520,11 @@ class MyMainWindow(QtWidgets.QMainWindow):
             self.line = QtWidgets.QLineEdit()
             self.line.resize(200, 30)
             self.line.move(-150, 370)
+            text2 = self.text.split("/")
             if self.text == "":
                 self.text = str(current_level)
+            elif int(text2[-1]) == int(current_level):
+                pass
             else:
                 self.text = self.text + "/" + str(current_level)
 
@@ -620,6 +609,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
                 data2["connection_ids"] = [conns.conn[0].id, conns.conn[1].id]
                 data2["obj_image"] = conns.image
                 data2["connection_description"] = conns.descr
+                data2["path"] = conns.path
                 data.append(data2)
 
             data_objects = json.dump(data, file_conn, ensure_ascii=False, indent=4)
@@ -631,6 +621,8 @@ class MyMainWindow(QtWidgets.QMainWindow):
 
         if item.startswith("file"):
             print(item.split("/"))
+            path = item[8:]
+            print(path)
             # item.id2 = item.id2.split("/")[-1]
             name = item.split("/")[
                 -1]  # убираем полный абсолютный путь, оставляем только название файла
@@ -643,7 +635,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
             dial.exec()
             if dial.fromarg:
                 Conn.add_conn_big_circle_on_scene(self.list_of_obj, 0, name, dial.fromarg[0],
-                               dial.fromarg[1], dial.fromarg[2])  # добавляем обьект в словарь
+                               dial.fromarg[1], dial.fromarg[2], path)  # добавляем обьект в словарь
                 self.scene.clear()
                 self.initUI(current_level)  # вызываем перерисовку ui
 
@@ -778,7 +770,7 @@ def main(arguments):
     app = QtWidgets.QApplication(arguments)
 
     list_of_conns = []
-    global list_of_obj_from_json
+    global list_of_obj_from_json, new_id
     list_of_obj_from_json = []
     with open("object_base.json", encoding="utf8") as file_objects:
         # считали данные из открвтого файла
@@ -804,6 +796,7 @@ def main(arguments):
     print(list_of_conns)
 
     # print(list_of_obj)
+    new_id = len(list_of_conns)
     window = MyMainWindow(list_of_conns)
     window.setWindowTitle("Connecton search")
     #window.setGeometry(450, 200, 600, 600)
