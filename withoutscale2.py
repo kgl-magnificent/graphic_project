@@ -6,6 +6,7 @@ from already_exists import Ui_Form
 from dialog_with_obj import Ui_Form2
 from path_is_possible import  Ui_Form_Path
 from path_is_inpossible import  Ui_Form_Path2
+from bug_in_path import Ui_Form_bug
 
 
 
@@ -90,11 +91,15 @@ class MyGraphicsView(QtWidgets.QGraphicsView):
             super(MyGraphicsView, self).keyPressEvent(event)
 
 
-
+class Form_bug_in_path(Ui_Form_bug, QtWidgets.QDialog):
+    def __init__(self):
+        super(Form_bug_in_path, self).__init__()
+        self.setupUi(self)
+        self.setWindowTitle("Предупреждение!")
 
 class Form_already_exists(Ui_Form, QtWidgets.QDialog):
     def __init__(self):
-        super(Ui_Form, self).__init__()
+        super(Form_already_exists, self).__init__()
         self.setupUi(self)
         self.setWindowTitle("Предупреждение!")
 
@@ -176,11 +181,12 @@ class DataObject:
 
 class Conn:
 
-    def __init__(self, id, type, conn,image, descr):
+    def __init__(self, id, type, conn,image, flag, descr):
         self.id = id
         self.type = type
         self.conn = conn
         self.image = image
+        self.image_flag = flag
         self.descr = descr
         self.graph = []
 
@@ -227,7 +233,7 @@ class Conn:
                 print("что то снова сделали")
                 break
 
-        list_obj.append(Conn(new_id+1, type, [id_small, id_big], {"type": "circle", "params": {"x": 0, "y": 0, "radius":100} }, descr))
+        list_obj.append(Conn(new_id+1, type, [id_small, id_big], {"type": "circle", "params": {"x": 0, "y": 0, "radius":100} }, 0, descr))
         new_id = new_id + 1
 
     @staticmethod
@@ -251,7 +257,7 @@ class Conn:
             print("все не так")
         list_of_obj_from_json.append(id_small)
         list_obj.append(Conn(new_id + 1, type, [id_small, id_big],
-                             {"type": "circle", "params": {"x": 0, "y": 0, "radius": 100}}, descr))
+                             {"type": "circle", "params": {"x": 0, "y": 0, "radius": 100}}, 0, descr))
         new_id = new_id + 1
 
 
@@ -270,7 +276,7 @@ class Conn:
 
         list_of_obj_from_json.append(id_small) #добавляем элемент
         list_obj.append(Conn(new_id + 1, type, [id_small, id_big],
-                             {"type": "circle", "params": {"x": 0, "y": 0, "radius": 100}}, descr))
+                             {"type": "circle", "params": {"x": 0, "y": 0, "radius": 100}}, 0, descr))
         print("list_obj", list_obj)
         new_id = new_id + 1
 
@@ -416,10 +422,16 @@ class MyMainWindow(QtWidgets.QMainWindow):
                 for j in little_circles:
                     print(j)
                     j.graph = MyItem(j.conn[0].id, "little", j.conn[0].name, j.id)
-                    j.graph.setPos(positions_add[n][0], positions_add[n][1])
-                    j.image["params"]["x"] = positions_add[n][0]
-                    j.image["params"]["y"] = positions_add[n][1]
-                    j.image["params"]["radius"] = R_little
+                    if j.image_flag != 1:
+                        j.graph.setPos(positions_add[n][0], positions_add[n][1])
+                        j.image["params"]["x"] = positions_add[n][0]
+                        j.image["params"]["y"] = positions_add[n][1]
+                        j.image["params"]["radius"] = R_little
+                    elif j.image_flag == 1:
+                        j.graph.setPos(j.image["params"]["x"], j.image["params"]["y"])
+                        print(j.image["params"]["x"], j.image["params"]["y"])
+                        print("отрисовали по дркгому")
+
                     j.graph.setParentItem(i.graph)
                     n = n + 1
 
@@ -532,6 +544,9 @@ class MyMainWindow(QtWidgets.QMainWindow):
                     os.startfile(i.conn[0].path)
                 else:
                     print("path=", i.conn[0].path)
+                    bug_in_path = Form_bug_in_path()
+                    bug_in_path.setGeometry(700, 450, 311, 183)
+                    bug_in_path.exec()
 
     def BtnClicked(self):
         print(33)
@@ -601,6 +616,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
                 data2["connection_type"] = conns.type
                 data2["connection_ids"] = [conns.conn[0].id, conns.conn[1].id]
                 data2["obj_image"] = conns.image
+                data2["image_flag"] = conns.image_flag
                 data2["connection_description"] = conns.descr
 
                 data.append(data2)
@@ -701,14 +717,27 @@ class MyMainWindow(QtWidgets.QMainWindow):
                 self.initUI(current_level)  # вызываем перерисовку ui
         elif int(item.id) != int(item.id_peretask):
             self.flag_uze_est = 0
+
             for i in self.list_of_obj:
 
                 if int(item.id_peretask) == int(i.conn[0].id):
                     if int(item.id) == int(i.conn[1].id):
                         self.flag_uze_est = 1
-                        already_exists = Form_already_exists()
-                        already_exists.setGeometry(700, 450, 311, 183)
-                        already_exists.exec()
+                        # already_exists = Form_already_exists()
+                        # already_exists.setGeometry(700, 450, 311, 183)
+                        # already_exists.exec()
+                        print(item.eventPos)
+                        print(item.id_peretask)
+                        for j in self.list_of_obj:
+                            if j.conn[0].id == int(item.id_peretask):
+                                j.image["params"]["x"] = (item.eventPos.x())
+                                j.image["params"]["y"] = (item.eventPos.y())
+
+                                #print(item.eventPosX, item.eventPosY)
+                                j.image_flag = 1
+                                self.scene.clear()
+                                self.initUI(current_level)
+
                         break
 
             if self.flag_uze_est == 0:
@@ -727,6 +756,9 @@ class MyMainWindow(QtWidgets.QMainWindow):
             already_exists = Form_already_exists()
             already_exists.setGeometry(700, 450, 311, 183)
             already_exists.exec()
+            #видимо здесь сделать надо обработку
+            print(item.eventPosX)
+            print(item.eventPosY)
 
     def handleSelectIt(self, item):
         print("нажали")
@@ -750,18 +782,18 @@ def main(arguments):
     list_of_conns = []
     global list_of_obj_from_json, new_id
     list_of_obj_from_json = []
-    with open("object_base2.json", encoding="utf8") as file_objects:
+    with open("object_base.json", encoding="utf8") as file_objects:
         # считали данные из открвтого файла
         data_objects = json.load(file_objects)
         for i in data_objects:
             data = DataObject(i["obj_id"], i["obj_name"], i["obj_description"], i["path"])
             list_of_obj_from_json.append(data)
 
-    with open("connections_base2.json", encoding="utf8") as file_connections:
+    with open("connections_base.json", encoding="utf8") as file_connections:
         # считали данные из открвтого файла
         data_conn = json.load(file_connections)
         for i in data_conn:
-            data = Conn(i["connection_id"], i["connection_type"], i["connection_ids"], i["obj_image"], i["connection_description"])
+            data = Conn(i["connection_id"], i["connection_type"], i["connection_ids"], i["obj_image"], i["image_flag"], i["connection_description"])
             list_of_conns.append(data)
 
     for i in list_of_conns:

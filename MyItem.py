@@ -19,6 +19,7 @@ class MyItem(QtWidgets.QGraphicsItem):
         self.sam_text = ""
         self.flag_scene = 0
         self.conn_id = conn_id
+        self.eventPos = 0
         self._brush = QtGui.QBrush(QtCore.Qt.green)
         self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable, True)
         #self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable, True)
@@ -174,6 +175,9 @@ class MyItem(QtWidgets.QGraphicsItem):
         print(event.mimeData().formats())
         print("dropEvent")
         self.id_peretask = event.mimeData().text()
+        self.eventPos = self.mapToItem(self, event.pos())
+        #self.eventPosY = self.mapToItem(self, event.pos().y())
+
         self.scene().newIT.emit(self)
 
     def keyPressEvent(self, event):

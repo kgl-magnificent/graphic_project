@@ -14,6 +14,7 @@
                 "radius": 100
             }
         },
+        "image_flag": 0,
         "connection_description": "объекты сцены"
     },
     {
@@ -31,6 +32,7 @@
                 "radius": 100
             }
         },
+        "image_flag": 0,
         "connection_description": "объекты сцены"
     },
     {
@@ -48,6 +50,7 @@
                 "radius": 100
             }
         },
+        "image_flag": 0,
         "connection_description": "объекты сцены"
     },
     {
@@ -65,6 +68,7 @@
                 "radius": 30
             }
         },
+        "image_flag": 0,
         "connection_description": "объекты алмаз"
     },
     {
@@ -82,6 +86,7 @@
                 "radius": 30
             }
         },
+        "image_flag": 0,
         "connection_description": "объекты алмаз"
     },
     {
@@ -99,6 +104,7 @@
                 "radius": 30
             }
         },
+        "image_flag": 0,
         "connection_description": "объекты алмаз"
     },
     {
@@ -116,6 +122,7 @@
                 "radius": 30
             }
         },
+        "image_flag": 0,
         "connection_description": "объекты мегаполис"
     },
     {
@@ -133,6 +140,7 @@
                 "radius": 30
             }
         },
+        "image_flag": 0,
         "connection_description": "объекты мегаполис"
     },
     {
@@ -150,6 +158,7 @@
                 "radius": 30
             }
         },
+        "image_flag": 0,
         "connection_description": "объекты мегаполис"
     },
     {
@@ -167,6 +176,7 @@
                 "radius": 30
             }
         },
+        "image_flag": 0,
         "connection_description": "объекты мцп"
     },
     {
@@ -184,6 +194,7 @@
                 "radius": 30
             }
         },
+        "image_flag": 0,
         "connection_description": "объекты мцп"
     },
     {
@@ -201,6 +212,7 @@
                 "radius": 100
             }
         },
+        "image_flag": 0,
         "connection_description": "объекты мцп"
     },
     {
@@ -218,74 +230,7 @@
                 "radius": 100
             }
         },
+        "image_flag": 0,
         "connection_description": "объекты мцп"
-    },
-    {
-        "connection_id": 16,
-        "connection_type": "",
-        "connection_ids": [
-            16,
-            15
-        ],
-        "obj_image": {
-            "type": "circle",
-            "params": {
-                "x": 0,
-                "y": 0,
-                "radius": 30
-            }
-        },
-        "connection_description": ""
-    },
-    {
-        "connection_id": 17,
-        "connection_type": "",
-        "connection_ids": [
-            17,
-            14
-        ],
-        "obj_image": {
-            "type": "circle",
-            "params": {
-                "x": 30.0,
-                "y": 0.0,
-                "radius": 30
-            }
-        },
-        "connection_description": ""
-    },
-    {
-        "connection_id": 19,
-        "connection_type": "",
-        "connection_ids": [
-            19,
-            18
-        ],
-        "obj_image": {
-            "type": "circle",
-            "params": {
-                "x": 0,
-                "y": 0,
-                "radius": 30
-            }
-        },
-        "connection_description": ""
-    },
-    {
-        "connection_id": 26,
-        "connection_type": "",
-        "connection_ids": [
-            26,
-            14
-        ],
-        "obj_image": {
-            "type": "circle",
-            "params": {
-                "x": -30.0,
-                "y": 3.67394039744206e-15,
-                "radius": 30
-            }
-        },
-        "connection_description": ""
     }
 ]
