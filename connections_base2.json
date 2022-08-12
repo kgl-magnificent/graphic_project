@@ -14,8 +14,7 @@
                 "radius": 100
             }
         },
-        "connection_description": "объекты сцены",
-        "path": 0
+        "connection_description": "объекты сцены"
     },
     {
         "connection_id": 1,
@@ -32,8 +31,7 @@
                 "radius": 100
             }
         },
-        "connection_description": "объекты сцены",
-        "path": 0
+        "connection_description": "объекты сцены"
     },
     {
         "connection_id": 2,
@@ -46,12 +44,11 @@
             "type": "circle",
             "params": {
                 "x": -50.00000000000004,
-                "y": -86.60254037844383,
+                "y": -86.60254037844385,
                 "radius": 100
             }
         },
-        "connection_description": "объекты сцены",
-        "path": 0
+        "connection_description": "объекты сцены"
     },
     {
         "connection_id": 3,
@@ -68,8 +65,7 @@
                 "radius": 30
             }
         },
-        "connection_description": "объекты алмаз",
-        "path": 0
+        "connection_description": "объекты алмаз"
     },
     {
         "connection_id": 4,
@@ -86,8 +82,7 @@
                 "radius": 30
             }
         },
-        "connection_description": "объекты алмаз",
-        "path": 0
+        "connection_description": "объекты алмаз"
     },
     {
         "connection_id": 5,
@@ -104,8 +99,7 @@
                 "radius": 30
             }
         },
-        "connection_description": "объекты алмаз",
-        "path": 0
+        "connection_description": "объекты алмаз"
     },
     {
         "connection_id": 6,
@@ -122,8 +116,7 @@
                 "radius": 30
             }
         },
-        "connection_description": "объекты мегаполис",
-        "path": 0
+        "connection_description": "объекты мегаполис"
     },
     {
         "connection_id": 7,
@@ -140,8 +133,7 @@
                 "radius": 30
             }
         },
-        "connection_description": "объекты мегаполис",
-        "path": 0
+        "connection_description": "объекты мегаполис"
     },
     {
         "connection_id": 8,
@@ -158,8 +150,7 @@
                 "radius": 30
             }
         },
-        "connection_description": "объекты мегаполис",
-        "path": 0
+        "connection_description": "объекты мегаполис"
     },
     {
         "connection_id": 10,
@@ -176,8 +167,7 @@
                 "radius": 30
             }
         },
-        "connection_description": "объекты мцп",
-        "path": 0
+        "connection_description": "объекты мцп"
     },
     {
         "connection_id": 11,
@@ -194,8 +184,7 @@
                 "radius": 30
             }
         },
-        "connection_description": "объекты мцп",
-        "path": 0
+        "connection_description": "объекты мцп"
     },
     {
         "connection_id": 12,
@@ -212,8 +201,7 @@
                 "radius": 100
             }
         },
-        "connection_description": "объекты мцп",
-        "path": 0
+        "connection_description": "объекты мцп"
     },
     {
         "connection_id": 13,
@@ -230,7 +218,74 @@
                 "radius": 100
             }
         },
-        "connection_description": "объекты мцп",
-        "path": 0
+        "connection_description": "объекты мцп"
+    },
+    {
+        "connection_id": 16,
+        "connection_type": "",
+        "connection_ids": [
+            16,
+            15
+        ],
+        "obj_image": {
+            "type": "circle",
+            "params": {
+                "x": 0,
+                "y": 0,
+                "radius": 30
+            }
+        },
+        "connection_description": ""
+    },
+    {
+        "connection_id": 17,
+        "connection_type": "",
+        "connection_ids": [
+            17,
+            14
+        ],
+        "obj_image": {
+            "type": "circle",
+            "params": {
+                "x": 30.0,
+                "y": 0.0,
+                "radius": 30
+            }
+        },
+        "connection_description": ""
+    },
+    {
+        "connection_id": 19,
+        "connection_type": "",
+        "connection_ids": [
+            19,
+            18
+        ],
+        "obj_image": {
+            "type": "circle",
+            "params": {
+                "x": 0,
+                "y": 0,
+                "radius": 30
+            }
+        },
+        "connection_description": ""
+    },
+    {
+        "connection_id": 26,
+        "connection_type": "",
+        "connection_ids": [
+            26,
+            14
+        ],
+        "obj_image": {
+            "type": "circle",
+            "params": {
+                "x": -30.0,
+                "y": 3.67394039744206e-15,
+                "radius": 30
+            }
+        },
+        "connection_description": ""
     }
 ]

@@ -2,71 +2,175 @@
     {
         "obj_id": 0,
         "obj_name": "Сцена",
-        "obj_description": "Сцена"
+        "obj_description": "Сцена",
+        "path": 0
     },
     {
         "obj_id": 1,
         "obj_name": "Алмаз",
-        "obj_description": "Группа изделия разрабатываемых для ПАО НПО Алмаз"
+        "obj_description": "Группа изделия разрабатываемых для ПАО НПО Алмаз",
+        "path": 0
     },
     {
         "obj_id": 2,
         "obj_name": "ГВМ100/6",
-        "obj_description": "Изделие ГВМ100/6 ЮФКВ.466535.007"
+        "obj_description": "Изделие ГВМ100/6 ЮФКВ.466535.007",
+        "path": 0
     },
     {
         "obj_id": 3,
         "obj_name": "ГВМ100/6-410",
-        "obj_description": "Изделие ГВМ100/6-410 ЮФКВ.469555.268"
+        "obj_description": "Изделие ГВМ100/6-410 ЮФКВ.469555.268",
+        "path": 0
     },
     {
         "obj_id": 4,
         "obj_name": "НСГН-203",
-        "obj_description": "Изделие ГВМ100/6-410 ЮФКВ.469555.268"
+        "obj_description": "Изделие ГВМ100/6-410 ЮФКВ.469555.268",
+        "path": 0
     },
     {
         "obj_id": 5,
         "obj_name": "Мегаполис Октопус",
-        "obj_description": "Изделие ГВМ100/6-410 ЮФКВ.469555.268"
+        "obj_description": "Изделие ГВМ100/6-410 ЮФКВ.469555.268",
+        "path": 0
     },
     {
         "obj_id": 6,
         "obj_name": "БЦВМ-Р",
-        "obj_description": "Изделие ГВМ100/6-410 ЮФКВ.469555.268"
+        "obj_description": "Изделие ГВМ100/6-410 ЮФКВ.469555.268",
+        "path": 0
     },
     {
         "obj_id": 7,
         "obj_name": "БЦВМ-К",
-        "obj_description": "Изделие ГВМ100/6-410 ЮФКВ.469555.268"
+        "obj_description": "Изделие ГВМ100/6-410 ЮФКВ.469555.268",
+        "path": 0
     },
     {
         "obj_id": 8,
         "obj_name": "СД ИМА БК",
-        "obj_description": "Изделие ГВМ100/6-410 ЮФКВ.469555.268"
+        "obj_description": "Изделие ГВМ100/6-410 ЮФКВ.469555.268",
+        "path": 0
     },
     {
         "obj_id": 9,
         "obj_name": "МЦП-15",
-        "obj_description": "Изделие ГВМ100/6-410 ЮФКВ.469555.268"
+        "obj_description": "Изделие ГВМ100/6-410 ЮФКВ.469555.268",
+        "path": 0
     },
     {
         "obj_id": 10,
         "obj_name": "МЦП-15-1",
-        "obj_description": "Изделие ГВМ100/6-410 ЮФКВ.469555.268"
+        "obj_description": "Изделие ГВМ100/6-410 ЮФКВ.469555.268",
+        "path": 0
     },
     {
         "obj_id": 11,
         "obj_name": "МЦП-15-3",
-        "obj_description": "Изделие ГВМ100/6-410 ЮФКВ.469555.268"
+        "obj_description": "Изделие ГВМ100/6-410 ЮФКВ.469555.268",
+        "path": 0
     },
     {
         "obj_id": 12,
         "obj_name": "МЦП-15-4",
-        "obj_description": "Изделие ГВМ100/6-410 ЮФКВ.469555.268"
+        "obj_description": "Изделие ГВМ100/6-410 ЮФКВ.469555.268",
+        "path": 0
     },
     {
         "obj_id": 13,
         "obj_name": "МЦП-15-5",
-        "obj_description": "Изделие ГВМ100/6-410 ЮФКВ.469555.268"
+        "obj_description": "Изделие ГВМ100/6-410 ЮФКВ.469555.268",
+        "path": 0
+    },
+    {
+        "obj_id": 14,
+        "obj_name": "lightMips",
+        "obj_description": "",
+        "path": "C:/Users/User/Documents/lightMips"
+    },
+    {
+        "obj_id": 15,
+        "obj_name": "J-instruct",
+        "obj_description": "",
+        "path": "C:/Users/User/Documents/J-instruct"
+    },
+    {
+        "obj_id": 16,
+        "obj_name": "Virtual Machines",
+        "obj_description": "",
+        "path": "C:/Users/User/Documents/Virtual Machines"
+    },
+    {
+        "obj_id": 17,
+        "obj_name": "grafic_project",
+        "obj_description": "",
+        "path": "C:/Users/User/Documents/grafic_project"
+    },
+    {
+        "obj_id": 18,
+        "obj_name": "Fax",
+        "obj_description": "",
+        "path": "C:/Users/User/Documents/Fax"
+    },
+    {
+        "obj_id": 19,
+        "obj_name": "Virtual Machines",
+        "obj_description": "",
+        "path": "C:/Users/User/Documents/Virtual Machines"
+    },
+    {
+        "obj_id": 20,
+        "obj_name": "Scan",
+        "obj_description": "",
+        "path": "C:/Users/User/Documents/Scan"
+    },
+    {
+        "obj_id": 21,
+        "obj_name": "Scanned Documents",
+        "obj_description": "",
+        "path": "C:/Users/User/Documents/Scanned Documents"
+    },
+    {
+        "obj_id": 22,
+        "obj_name": "CentOS 7 64-bit",
+        "obj_description": "",
+        "path": "C:/Users/User/Documents/Virtual Machines/CentOS 7 64-bit"
+    },
+    {
+        "obj_id": 23,
+        "obj_name": "Debian 9.x 64-bit",
+        "obj_description": "",
+        "path": "C:/Users/User/Documents/Virtual Machines/Debian 9.x 64-bit"
+    },
+    {
+        "obj_id": 24,
+        "obj_name": "cubic",
+        "obj_description": "",
+        "path": "D:/WORK/Repository/cubic"
+    },
+    {
+        "obj_id": 25,
+        "obj_name": "ГВМ100/6",
+        "obj_description": "",
+        "path": 0
+    },
+    {
+        "obj_id": 26,
+        "obj_name": "already_exists.py",
+        "obj_description": "",
+        "path": "D:/WORK/Repository/p131/graph_proj/graphic_project/already_exists.py"
+    },
+    {
+        "obj_id": 27,
+        "obj_name": "already_exists.py",
+        "obj_description": "",
+        "path": "D:/WORK/Repository/p131/graph_proj/graphic_project/already_exists.py"
+    },
+    {
+        "obj_id": 28,
+        "obj_name": "grafic_project",
+        "obj_description": "",
+        "path": "C:/Users/User/Documents/grafic_project"
     }
 ]

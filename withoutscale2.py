@@ -159,10 +159,11 @@ class MyDialog(Ui_MyDialog,  QtWidgets.QDialog):
 
 class DataObject:
 
-    def __init__(self, id, name, descript):
+    def __init__(self, id, name, descript, path = 0):
         self.id = id
         self.name = name
         self.descript = descript
+        self.path = path
         #self.connections = []
 
 
@@ -175,14 +176,14 @@ class DataObject:
 
 class Conn:
 
-    def __init__(self, id, type, conn,image, descr, path = 0):
+    def __init__(self, id, type, conn,image, descr):
         self.id = id
         self.type = type
         self.conn = conn
         self.image = image
         self.descr = descr
         self.graph = []
-        self.path = path
+
 
     def __repr__(self):
         return f'{self.id}, {self.conn}'
@@ -230,12 +231,12 @@ class Conn:
         new_id = new_id + 1
 
     @staticmethod
-    def add_conn2(list_obj, id_big, name, type, descr, desc_obj):
+    def add_conn2(list_obj, id_big, name, type, descr, desc_obj, path = 0):
 
         global new_id
 
         #id_small = DataObject(Conn.search_maximum(list_obj), name, desc_obj)
-        id_small = DataObject(len(list_of_obj_from_json) + 1, name, desc_obj)
+        id_small = DataObject(len(list_of_obj_from_json), name, desc_obj, path)
         flag_srabotalo = 0
         print("id_small", id_small)
 
@@ -259,7 +260,7 @@ class Conn:
         global list_of_obj_from_json, new_id
         print("add_conn_big_circle_on_scene")
         print(list_of_obj_from_json)
-        id_small = DataObject(len(list_of_obj_from_json) + 1, name, desc_obj) #создаем объект
+        id_small = DataObject(len(list_of_obj_from_json), name, desc_obj, path) #создаем объект
 
         for j in list_of_obj_from_json: #ищем сцену
             if int(j.id) == 0:
@@ -269,7 +270,7 @@ class Conn:
 
         list_of_obj_from_json.append(id_small) #добавляем элемент
         list_obj.append(Conn(new_id + 1, type, [id_small, id_big],
-                             {"type": "circle", "params": {"x": 0, "y": 0, "radius": 100}}, descr, path))
+                             {"type": "circle", "params": {"x": 0, "y": 0, "radius": 100}}, descr))
         print("list_obj", list_obj)
         new_id = new_id + 1
 
@@ -311,16 +312,6 @@ class Scene(QtWidgets.QGraphicsScene):
 
 class MyMainWindow(QtWidgets.QMainWindow):
 
-    # это нужно для вывода в статус бар
-    # def onSelectionChanged(self):
-    #     message = "Items selecteds: "
-    #     for item in self.scene.selectedItems():
-    #         message += " " + item.data(Scene.NameItem)
-    #     self.statusBar().showMessage(message)
-
-    #def __init__(self, *args, **kwargs):
-    #инициализация конструктора
-    #def __init__(self, dict_with_elem_conn, dict_obj_name):
     def __init__(self, list_of_obj):
         super().__init__()
         self.list_of_obj = list_of_obj
@@ -328,19 +319,12 @@ class MyMainWindow(QtWidgets.QMainWindow):
         self.text = ""
         self.flag_uze_est = 0
 
-        #self.grand_big
-        #QtWidgets.QMainWindow.__init__(self, *args, **kwargs)
-        #self.scene = QtWidgets.QGraphicsScene()
         self.scene = Scene()
         self.buffer_back = []
-        #self.initGraphicsObject()
         self.initUI(current_level)
-        #self.scene.setSceneRect(-300, -300, 600, 600)
         self.scene.setSceneRect(-400, -400, 800, 800)
         self.view = QtWidgets.QGraphicsView()
         self.setCentralWidget(self.view)
-        #self.setAcceptDrops(True)
-
 
         #пробрасывем сигналы
         self.scene.selectedIt.connect(self.handleSelectIt)
@@ -448,7 +432,6 @@ class MyMainWindow(QtWidgets.QMainWindow):
             self.btn = QtWidgets.QPushButton("Проверить")
             self.btn.move(50, 370)
             self.btn.resize(100, 30)
-            #self.btn.clicked.connect(self.BtnClicked)
             self.scene.addWidget(self.btn)
             self.btn.clicked.connect(self.BtnClicked)
             self.newJsonObject()
@@ -516,9 +499,6 @@ class MyMainWindow(QtWidgets.QMainWindow):
                     j.graph.setParentItem(i.graph)
                     n = n + 1
 
-            # buffer_back = self.list_of_obj.copy()
-
-
             self.line = QtWidgets.QLineEdit()
             self.line.resize(200, 30)
             self.line.move(-150, 370)
@@ -547,7 +527,11 @@ class MyMainWindow(QtWidgets.QMainWindow):
         print(item.conn_id)
         for i in self.list_of_obj:
             if i.id == item.conn_id:
-                os.startfile(i.path)
+
+                if type(i.conn[0].path) != int:
+                    os.startfile(i.conn[0].path)
+                else:
+                    print("path=", i.conn[0].path)
 
     def BtnClicked(self):
         print(33)
@@ -598,6 +582,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
                 data2["obj_name"] = obj.name
 
                 data2["obj_description"] = obj.descript
+                data2["path"] = obj.path
 
                 data.append(data2)
 
@@ -617,7 +602,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
                 data2["connection_ids"] = [conns.conn[0].id, conns.conn[1].id]
                 data2["obj_image"] = conns.image
                 data2["connection_description"] = conns.descr
-                data2["path"] = conns.path
+
                 data.append(data2)
 
             data_objects = json.dump(data, file_conn, ensure_ascii=False, indent=4)
@@ -634,11 +619,9 @@ class MyMainWindow(QtWidgets.QMainWindow):
             # item.id2 = item.id2.split("/")[-1]
             name = item.split("/")[
                 -1]  # убираем полный абсолютный путь, оставляем только название файла
-            #item = len(self.list_of_obj)  # присваиваем новому обьекту id
 
             # проблема все таки здесь
             dial = MyDialog_big()
-            # dial.setGeometry(600, 350, 311, 183)
             dial.setGeometry(700, 450, 311, 250)
             dial.exec()
             if dial.fromarg:
@@ -649,6 +632,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
 
         else:
             self.flag_uze_est = 0
+            print("вот это вот в item:", item)
             temp_circle = Conn.search_in_objbase(int(item))
             temp_scene = Conn.search_in_objbase(0)
 
@@ -658,7 +642,6 @@ class MyMainWindow(QtWidgets.QMainWindow):
 
                         self.flag_uze_est = 1
                         already_exists = Form_already_exists()
-                        #already_exists.setGeometry(600, 350, 311, 183)
                         already_exists.setGeometry(700, 450, 311, 183)
                         already_exists.exec()
                         break
@@ -667,13 +650,12 @@ class MyMainWindow(QtWidgets.QMainWindow):
 
                 # здесь сделать окно, с полями ввода
                 dial = MyDialog_big()
-                #dial.setGeometry(600, 350, 311, 250)
                 dial.setGeometry(700, 450, 311, 250)
                 dial.exec()
                 temp_circle = Conn.search_in_objbase(int(item))
                 if dial.fromarg:
                     Conn.add_conn_big_circle_on_scene(self.list_of_obj, 0, temp_circle.name, dial.fromarg[0],
-                                                      dial.fromarg[1],  dial.fromarg[2])  # добавляем обьект в словарь
+                                                      dial.fromarg[1],  dial.fromarg[2], temp_circle.path)  # добавляем обьект в словарь
 
                 self.scene.clear()
                 self.initUI(current_level)  # вызываем перерисовку ui
@@ -690,7 +672,6 @@ class MyMainWindow(QtWidgets.QMainWindow):
 
 
         self.scene.clear()
-        #time.sleep(2)
         self.initUI(current_level)
 
     def newItem(self, item):
@@ -704,19 +685,18 @@ class MyMainWindow(QtWidgets.QMainWindow):
         #ЭТО ДОБАВЛЕНИЕ НОВОГО ФАЙЛА
         if item.id_peretask.startswith("file"):
             print("файл!")
+            path = item.id_peretask[8:]
             print(item.id_peretask.split("/"))
-            #item.id2 = item.id2.split("/")[-1]
             item.name = item.id_peretask.split("/")[-1] #убираем полный абсолютный путь, оставляем только название файла
             item.id_peretask = len(self.list_of_obj) #присваиваем новому обьекту id
 
             #проблема все таки здесь
             dial = MyDialog_big()
-            #dial.setGeometry(600, 350, 311, 183)
             dial.setGeometry(700, 450, 311, 250)
             dial.exec()
             if dial.fromarg:
                 Conn.add_conn2(self.list_of_obj, int(item.id), item.name, dial.fromarg[0],
-                              dial.fromarg[1], dial.fromarg[2])  # добавляем обьект в словарь
+                              dial.fromarg[1], dial.fromarg[2], path)  # добавляем обьект в словарь
                 self.scene.clear()
                 self.initUI(current_level)  # вызываем перерисовку ui
         elif int(item.id) != int(item.id_peretask):
@@ -745,7 +725,6 @@ class MyMainWindow(QtWidgets.QMainWindow):
                 self.initUI(current_level) #вызываем перерисовку ui
         else:
             already_exists = Form_already_exists()
-            #already_exists.setGeometry(600, 350, 311, 183)
             already_exists.setGeometry(700, 450, 311, 183)
             already_exists.exec()
 
@@ -761,17 +740,8 @@ class MyMainWindow(QtWidgets.QMainWindow):
                 break
         if flag == 1:
             self.scene.clear()
-            #self.text = self.text + str(current_level) + "/"
+
             self.initUI(current_level)
-
-    # def lineAddText(self, text):
-    #     self.text = self.text + str(text) + "/"
-    #     self.line.setText(self.text)
-
-
-
-
-
 
 
 def main(arguments):
@@ -780,14 +750,14 @@ def main(arguments):
     list_of_conns = []
     global list_of_obj_from_json, new_id
     list_of_obj_from_json = []
-    with open("object_base.json", encoding="utf8") as file_objects:
+    with open("object_base2.json", encoding="utf8") as file_objects:
         # считали данные из открвтого файла
         data_objects = json.load(file_objects)
         for i in data_objects:
-            data = DataObject(i["obj_id"], i["obj_name"], i["obj_description"])
+            data = DataObject(i["obj_id"], i["obj_name"], i["obj_description"], i["path"])
             list_of_obj_from_json.append(data)
 
-    with open("connections_base.json", encoding="utf8") as file_connections:
+    with open("connections_base2.json", encoding="utf8") as file_connections:
         # считали данные из открвтого файла
         data_conn = json.load(file_connections)
         for i in data_conn:
