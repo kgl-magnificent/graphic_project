@@ -46,7 +46,7 @@
             "type": "circle",
             "params": {
                 "x": -50.00000000000004,
-                "y": -86.60254037844385,
+                "y": -86.60254037844383,
                 "radius": 100
             }
         },
@@ -162,7 +162,7 @@
         "connection_description": "объекты мегаполис"
     },
     {
-        "connection_id": 10,
+        "connection_id": 9,
         "connection_type": "additive",
         "connection_ids": [
             10,
@@ -171,8 +171,26 @@
         "obj_image": {
             "type": "circle",
             "params": {
-                "x": 30.0,
-                "y": 0.0,
+                "x": 30.000000000000043,
+                "y": 3.602540378443834,
+                "radius": 30
+            }
+        },
+        "image_flag": 1,
+        "connection_description": "объекты мцп"
+    },
+    {
+        "connection_id": 10,
+        "connection_type": "additive",
+        "connection_ids": [
+            11,
+            9
+        ],
+        "obj_image": {
+            "type": "circle",
+            "params": {
+                "x": 1.83697019872103e-15,
+                "y": 30.0,
                 "radius": 30
             }
         },
@@ -183,7 +201,7 @@
         "connection_id": 11,
         "connection_type": "additive",
         "connection_ids": [
-            11,
+            12,
             9
         ],
         "obj_image": {
@@ -201,33 +219,15 @@
         "connection_id": 12,
         "connection_type": "additive",
         "connection_ids": [
-            12,
-            11
-        ],
-        "obj_image": {
-            "type": "circle",
-            "params": {
-                "x": 0,
-                "y": 0,
-                "radius": 100
-            }
-        },
-        "image_flag": 0,
-        "connection_description": "объекты мцп"
-    },
-    {
-        "connection_id": 13,
-        "connection_type": "additive",
-        "connection_ids": [
             13,
-            11
+            9
         ],
         "obj_image": {
             "type": "circle",
             "params": {
-                "x": 0,
-                "y": 0,
-                "radius": 100
+                "x": -5.510910596163089e-15,
+                "y": -30.0,
+                "radius": 30
             }
         },
         "image_flag": 0,

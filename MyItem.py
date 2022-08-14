@@ -44,6 +44,9 @@ class MyItem(QtWidgets.QGraphicsItem):
             self.setAcceptHoverEvents(True)
             self.rectF = QtCore.QRectF(-230, -230, 430, 430)
 
+        if self.circle_type == "square":
+            self._brush = QtGui.QBrush(QtGui.QColor(255, 204, 153))
+            self.rectF = QtCore.QRectF(-230, -230, 430, 430)
 
     def boundingRect(self):
         return self.rectF
@@ -72,7 +75,11 @@ class MyItem(QtWidgets.QGraphicsItem):
         #print("mousePressEvent")
             # self.flag = 1
         time.sleep(0.5)
-        self.scene().selectedIt.emit(self)  # создается сигнал
+        if self.circle_type == "square":
+            self.scene().NewLevel.emit(self)
+            print("NewItem")
+        else:
+            self.scene().selectedIt.emit(self)  # создается сигнал
 
     def paint(self, painter, option=None, style=None, widget=None):
 
@@ -133,36 +140,46 @@ class MyItem(QtWidgets.QGraphicsItem):
                     self.sam_text = self.name
                 painter.drawText(-15, 5, str(self.sam_text))
 
+        if self.circle_type == "square":
+            painter.setBrush(self._brush)
+            painter.drawRect(-50, -50, 100, 100)
+            painter.setFont((QtGui.QFont("Verdana", 10)))
+            painter.drawText(-35, 5, str(self.name))
+
+
+
     #метод реализации drag and drop
     def mouseMoveEvent(self, e):
-        mime = QtCore.QMimeData() #создается обьект, в котором переносится информация при d"n"d
-        mime.setText(str(self.id)) #id обьекта сохраняется в mime обьект
-        #mime.setUrls([QtCore.QUrl("http://google.ru/")])
-        #mime.setData('application/x-qt-windows-mime;value="name"', bytearray(str(self.name), encoding="utf-8"))
-        drag = QtGui.QDrag(e.widget())
-        drag.setMimeData(mime)
+        if self.circle_type != "square":
+            mime = QtCore.QMimeData() #создается обьект, в котором переносится информация при d"n"d
+            text = str(self.id) + "/" + str(self.conn_id)
+            mime.setText(str(text)) #id обьекта сохраняется в mime обьект
+            #mime.setUrls([QtCore.QUrl("http://google.ru/")])
+            #mime.setData('application/x-qt-windows-mime;value="name"', bytearray(str(self.name), encoding="utf-8"))
+            drag = QtGui.QDrag(e.widget())
+            drag.setMimeData(mime)
 
-        #формируем картинку при перетаскивании
-        pix = QtGui.QPixmap(250, 250)
-        pix.fill(QtCore.Qt.white)
-        painter = QtGui.QPainter(pix)
-        #в зависимости от того, какой круг был выбран. происходит его рисование
-        if self.circle_type == "little":
-            painter.translate(20, 20) # сдвиг отностительно нуля было 20, 20
-        if self.circle_type == "big":
-            painter.translate(100, 100) #сдвига6емся относительно нуля
-        painter.setRenderHint(QtGui.QPainter.Antialiasing, True)
-        self.flag2 = 1
-        self.paint(painter, 0, 0) #
-        painter.end()
-        pix.setMask(pix.createHeuristicMask()) #сглаживание квадрата куда вписан круг и текст
-        drag.setPixmap(pix)
-        #смещение точки относительно "центра хватания"
-        if self.circle_type == "little":
-            drag.setHotSpot(QtCore.QPoint(17, 17)) # было 17, 17
-        if self.circle_type == "big":
-            drag.setHotSpot(QtCore.QPoint(100, 100))  # было 17, 17
-        dropAction = drag.exec(QtCore.Qt.MoveAction | QtCore.Qt.CopyAction | QtCore.Qt.LinkAction, QtCore.Qt.LinkAction) #добавляем флагов для типа перемещения
+            #формируем картинку при перетаскивании
+            pix = QtGui.QPixmap(250, 250)
+            pix.fill(QtCore.Qt.white)
+            painter = QtGui.QPainter(pix)
+            #в зависимости от того, какой круг был выбран. происходит его рисование
+            if self.circle_type == "little":
+                painter.translate(20, 20) # сдвиг отностительно нуля было 20, 20
+            if self.circle_type == "big":
+                painter.translate(100, 100) #сдвига6емся относительно нуля
+            painter.setRenderHint(QtGui.QPainter.Antialiasing, True)
+            self.flag2 = 1
+            self.paint(painter, 0, 0) #
+            painter.end()
+            pix.setMask(pix.createHeuristicMask()) #сглаживание квадрата куда вписан круг и текст
+            drag.setPixmap(pix)
+            #смещение точки относительно "центра хватания"
+            if self.circle_type == "little":
+                drag.setHotSpot(QtCore.QPoint(17, 17)) # было 17, 17
+            if self.circle_type == "big":
+                drag.setHotSpot(QtCore.QPoint(100, 100))  # было 17, 17
+            dropAction = drag.exec(QtCore.Qt.MoveAction | QtCore.Qt.CopyAction | QtCore.Qt.LinkAction, QtCore.Qt.LinkAction) #добавляем флагов для типа перемещения
 
         #self.setCursor(QtCore.Qt.ClosedHandCursor)
 
@@ -174,7 +191,9 @@ class MyItem(QtWidgets.QGraphicsItem):
     def dropEvent(self, event: 'QGraphicsSceneDragDropEvent') -> None:
         print(event.mimeData().formats())
         print("dropEvent")
-        self.id_peretask = event.mimeData().text()
+        text = (event.mimeData().text()).split("/")
+        self.id_peretask = text[0]
+        self.conn_id_old = text[1]
         self.eventPos = self.mapToItem(self, event.pos())
         #self.eventPosY = self.mapToItem(self, event.pos().y())
 
@@ -187,11 +206,11 @@ class MyItem(QtWidgets.QGraphicsItem):
             self.scene().delobj.emit(self)
 
 
-    def mouseDoubleClickEvent(self, event):
-        print("mousePressEvent")
-        #self.flag = 1
-        time.sleep(0.5)
-        self.scene().selectedIt.emit(self) #создается сигнал
+    # def mouseDoubleClickEvent(self, event):
+    #     print("mousePressEvent")
+    #     #self.flag = 1
+    #     time.sleep(0.5)
+    #     self.scene().selectedIt.emit(self) #создается сигнал
 
     def mousePressEvent(self, event: 'QGraphicsSceneMouseEvent') -> None:
         if event.button() == QtCore.Qt.RightButton:

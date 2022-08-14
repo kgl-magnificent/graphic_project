@@ -7,6 +7,7 @@ from dialog_with_obj import Ui_Form2
 from path_is_possible import  Ui_Form_Path
 from path_is_inpossible import  Ui_Form_Path2
 from bug_in_path import Ui_Form_bug
+from mydialog_window_current_level import Ui_MyDialog_cur_lev
 
 
 
@@ -81,7 +82,11 @@ class MyGraphicsView(QtWidgets.QGraphicsView):
                 flag_v_kruge = 1
 
         if flag_v_kruge == 0:
-            self.scene().newBigCircle.emit(event.mimeData().text())
+            list_with_data = []
+            list_with_data.append(event.mimeData().text())
+            positions = self.mapToScene(event.pos())
+            list_with_data.append(positions)
+            self.scene().newBigCircle.emit(list_with_data)
 
     def keyPressEvent(self, event):
         if event.key() == (QtCore.Qt.Key_Control and QtCore.Qt.Key_Z):
@@ -156,6 +161,29 @@ class MyDialog(Ui_MyDialog,  QtWidgets.QDialog):
         name_descr = self.lineEdit_desc.text()
         self.fromarg.append(name_type)
         self.fromarg.append(name_descr)
+        self.close()
+
+
+    def Cancel(self):
+        self.close()
+
+class MyDialog_cur_lev(Ui_MyDialog_cur_lev,  QtWidgets.QDialog):
+    def __init__(self):
+        super(MyDialog_cur_lev, self).__init__()
+        self.setupUi(self)
+        self.setWindowTitle("Введите ID")
+        self.fromarg = []
+        #6 buttons
+        self.pushButton_ok.clicked.connect(self.OK)
+        self.pushButton_cancel.clicked.connect(self.Cancel)
+
+
+    def OK(self):
+        self.fromarg = []
+        name_type = self.lineEdit_type.text()
+
+        self.fromarg.append(name_type)
+
         self.close()
 
 
@@ -301,14 +329,15 @@ class Conn:
 
 class Scene(QtWidgets.QGraphicsScene):
     NameItem = 1
-    #
+    #пробросили сигналы
     selectedIt = QtCore.pyqtSignal(object)
     newIT = QtCore.pyqtSignal(object)
     delobj = QtCore.pyqtSignal(object)
     newBigCircle = QtCore.pyqtSignal(object)
     CtrlZpressed = QtCore.pyqtSignal(object)
-    selectedIt = QtCore.pyqtSignal(object)
+    #selectedIt = QtCore.pyqtSignal(object)
     RightButtonClicked = QtCore.pyqtSignal(object)
+    NewLevel = QtCore.pyqtSignal(object)
 
     def __init__(self, *args, **kwargs):
         QtWidgets.QGraphicsScene.__init__(self, *args, **kwargs)
@@ -339,6 +368,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
         self.scene.newBigCircle.connect(self.createNewBigCiecle)
         self.scene.CtrlZpressed.connect(self.CtrlZ)
         self.scene.RightButtonClicked.connect(self.RightButton)
+        self.scene.NewLevel.connect(self.NewLevel)
 
 
 
@@ -397,10 +427,15 @@ class MyMainWindow(QtWidgets.QMainWindow):
             for i in big_circles:
                 print(i)
                 i.graph = MyItem(i.conn[0].id, "big", i.conn[0].name, i.id)
-                i.graph.setPos(positions_big[k][0], positions_big[k][1])
-                i.image["params"]["x"] = positions_big[k][0]
-                i.image["params"]["y"] = positions_big[k][1]
-                i.image["params"]["radius"] = R_Big
+                if i.image_flag == 0:
+                    i.graph.setPos(positions_big[k][0], positions_big[k][1])
+                    i.image["params"]["x"] = positions_big[k][0]
+                    i.image["params"]["y"] = positions_big[k][1]
+                    i.image["params"]["radius"] = R_Big
+                elif i.image_flag == 1:
+                    i.graph.setPos(i.image["params"]["x"], i.image["params"]["y"])
+                    positions_big[k][0] = i.image["params"]["x"]
+                    positions_big[k][1] = i.image["params"]["y"]
                 self.scene.addItem(i.graph)
                 k = k + 1
                 little_circles = Conn.search_for_id(self.list_of_obj, i.conn[0].id)
@@ -422,15 +457,14 @@ class MyMainWindow(QtWidgets.QMainWindow):
                 for j in little_circles:
                     print(j)
                     j.graph = MyItem(j.conn[0].id, "little", j.conn[0].name, j.id)
-                    if j.image_flag != 1:
+                    if j.image_flag == 0:
                         j.graph.setPos(positions_add[n][0], positions_add[n][1])
                         j.image["params"]["x"] = positions_add[n][0]
                         j.image["params"]["y"] = positions_add[n][1]
                         j.image["params"]["radius"] = R_little
                     elif j.image_flag == 1:
                         j.graph.setPos(j.image["params"]["x"], j.image["params"]["y"])
-                        print(j.image["params"]["x"], j.image["params"]["y"])
-                        print("отрисовали по дркгому")
+
 
                     j.graph.setParentItem(i.graph)
                     n = n + 1
@@ -445,7 +479,15 @@ class MyMainWindow(QtWidgets.QMainWindow):
             self.btn.move(50, 370)
             self.btn.resize(100, 30)
             self.scene.addWidget(self.btn)
+
+            square = MyItem(0, "square", "Переход", 0)
+            square.setPos(345, -345)
+            self.scene.addItem(square)
+
+
+
             self.btn.clicked.connect(self.BtnClicked)
+
             self.newJsonObject()
         else:
             big_circles = Conn.search_for_id(self.list_of_obj, int(id_big))
@@ -484,7 +526,12 @@ class MyMainWindow(QtWidgets.QMainWindow):
             for i in big_circles:
                 print(i)
                 i.graph = MyItem(i.conn[0].id, "big", i.conn[0].name, i.id)
-                i.graph.setPos(positions_big2[k][0], positions_big2[k][1])
+                if i.image_flag == 0:
+                    i.graph.setPos(positions_big2[k][0], positions_big2[k][1])
+                elif i.image_flag == 1:
+                    i.graph.setPos(i.image["params"]["x"], i.image["params"]["y"])
+                    positions_big[k][0] = i.image["params"]["x"]
+                    positions_big[k][1] = i.image["params"]["y"]
                 i.graph.setParentItem(grand_big)
                 k = k + 1
                 little_circles = Conn.search_for_id(self.list_of_obj, i.conn[0].id)
@@ -506,9 +553,12 @@ class MyMainWindow(QtWidgets.QMainWindow):
                 for j in little_circles:
                     print(j)
                     j.graph = MyItem(j.conn[0].id, "little", j.conn[0].name, j.id)
-                    j.graph.setPos(positions_add2[n][0], positions_add2[n][1])
+                    if j.image_flag == 0:
+                        j.graph.setPos(positions_add2[n][0], positions_add2[n][1])
 
-                    j.graph.setParentItem(i.graph)
+                        j.graph.setParentItem(i.graph)
+                    elif j.image_flag == 1:
+                         j.graph.setPos(j.image["params"]["x"], j.image["params"]["y"])
                     n = n + 1
 
             self.line = QtWidgets.QLineEdit()
@@ -530,6 +580,11 @@ class MyMainWindow(QtWidgets.QMainWindow):
             self.scene.addWidget(self.btn)
             self.btn.clicked.connect(self.BtnClicked)
 
+            square = MyItem(0, "square", "Переход", 0)
+            square.setPos(345, -345)
+            self.scene.addItem(square)
+
+
 
 
             self.newJsonObject()
@@ -549,8 +604,8 @@ class MyMainWindow(QtWidgets.QMainWindow):
                     bug_in_path.exec()
 
     def BtnClicked(self):
-        print(33)
         text = self.line.text()
+        #проверка на то, что чисто не одно
         if text.find("/") != -1:
             text_list = text.split("/")
             len_list = len(text_list)-1
@@ -572,10 +627,21 @@ class MyMainWindow(QtWidgets.QMainWindow):
                 path_is_inpossible = From_path_is_inpossible()
                 path_is_inpossible.setGeometry(700, 450, 311, 183)
                 path_is_inpossible.exec()
-        else:
-            print("hello")
 
 
+
+    def NewLevel(self):
+        print("pe")
+
+
+        dial = MyDialog_cur_lev()
+        dial.setGeometry(700, 450, 311, 200)
+        dial.exec()
+        if dial.fromarg:
+            current_level = int(dial.fromarg[0])
+
+            self.scene.clear()
+            self.initUI(current_level)
 
     def CtrlZ(self):
         self.list_of_obj = []
@@ -626,14 +692,14 @@ class MyMainWindow(QtWidgets.QMainWindow):
     #отрисовываем большой желтый круг на сцене
     def createNewBigCiecle(self, item):
         self.buffer_back = self.list_of_obj.copy()
-        print(self.buffer_back)
+        list_of_args = item
 
-        if item.startswith("file"):
-            print(item.split("/"))
-            path = item[8:]
+        if list_of_args[0].startswith("file"):
+            #print(item.split("/"))
+            path = list_of_args[0][8:]
             print(path)
             # item.id2 = item.id2.split("/")[-1]
-            name = item.split("/")[
+            name = list_of_args[0].split("/")[
                 -1]  # убираем полный абсолютный путь, оставляем только название файла
 
             # проблема все таки здесь
@@ -647,20 +713,29 @@ class MyMainWindow(QtWidgets.QMainWindow):
                 self.initUI(current_level)  # вызываем перерисовку ui
 
         else:
+
             self.flag_uze_est = 0
-            print("вот это вот в item:", item)
-            temp_circle = Conn.search_in_objbase(int(item))
+            print("вот это вот в item:", list_of_args[0])
+            #проверка есть ли уже такой круг на сцене
+            temp_circle = Conn.search_in_objbase(int(list_of_args[0].split("/")[0]))
             temp_scene = Conn.search_in_objbase(0)
 
             for i in self.list_of_obj:
                 if i.conn[0] == temp_circle and i.conn[1] == temp_scene:
 
 
-                        self.flag_uze_est = 1
-                        already_exists = Form_already_exists()
-                        already_exists.setGeometry(700, 450, 311, 183)
-                        already_exists.exec()
-                        break
+                    self.flag_uze_est = 1
+                    # already_exists = Form_already_exists()
+                    # already_exists.setGeometry(700, 450, 311, 183)
+                    # already_exists.exec()
+
+                    #обеспечиваеет сдвиг большого круга
+                    i.image["params"]["x"] = list_of_args[1].x()
+                    i.image["params"]["y"] = list_of_args[1].y()
+                    i.image_flag = 1
+                    self.scene.clear()
+                    self.initUI(current_level)
+                    break
 
             if self.flag_uze_est == 0:
 
@@ -668,7 +743,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
                 dial = MyDialog_big()
                 dial.setGeometry(700, 450, 311, 250)
                 dial.exec()
-                temp_circle = Conn.search_in_objbase(int(item))
+                temp_circle = Conn.search_in_objbase(int(list_of_args[0].split("/")[0]))
                 if dial.fromarg:
                     Conn.add_conn_big_circle_on_scene(self.list_of_obj, 0, temp_circle.name, dial.fromarg[0],
                                                       dial.fromarg[1],  dial.fromarg[2], temp_circle.path)  # добавляем обьект в словарь
@@ -715,30 +790,57 @@ class MyMainWindow(QtWidgets.QMainWindow):
                               dial.fromarg[1], dial.fromarg[2], path)  # добавляем обьект в словарь
                 self.scene.clear()
                 self.initUI(current_level)  # вызываем перерисовку ui
+
+        #это обработка перетаскивания уже сущесвующего круга
         elif int(item.id) != int(item.id_peretask):
             self.flag_uze_est = 0
 
+
+
             for i in self.list_of_obj:
 
-                if int(item.id_peretask) == int(i.conn[0].id):
-                    if int(item.id) == int(i.conn[1].id):
-                        self.flag_uze_est = 1
-                        # already_exists = Form_already_exists()
-                        # already_exists.setGeometry(700, 450, 311, 183)
-                        # already_exists.exec()
-                        print(item.eventPos)
-                        print(item.id_peretask)
-                        for j in self.list_of_obj:
-                            if j.conn[0].id == int(item.id_peretask):
-                                j.image["params"]["x"] = (item.eventPos.x())
-                                j.image["params"]["y"] = (item.eventPos.y())
+
+
+                print("old= ", item.conn_id_old)
+                for l in self.list_of_obj:
+                    if l.id == int(item.conn_id_old):
+                        connection = l
+
+                print("0 =", connection.conn[0].id)
+                print("1 =", connection.conn[1].id)
+
+
+                if int(item.id_peretask) == int(i.conn[0].id) and int(item.id) == int(i.conn[1].id):
+
+
+                    self.flag_uze_est = 1
+                    # already_exists = Form_already_exists()
+                    # already_exists.setGeometry(700, 450, 311, 183)
+                    # already_exists.exec()
+                    print(item.eventPos)
+                    print(item.id_peretask)
+                    for j in self.list_of_obj:
+                        #это смешение если обьект
+                        if j.conn[0].id == int(item.id_peretask) and j.conn[1].id == int(item.id) and int(item.id) == int(connection.conn[1].id):
+                            j.image["params"]["x"] = (item.eventPos.x())
+                            j.image["params"]["y"] = (item.eventPos.y())
 
                                 #print(item.eventPosX, item.eventPosY)
-                                j.image_flag = 1
-                                self.scene.clear()
-                                self.initUI(current_level)
+                            j.image_flag = 1
+                            self.scene.clear()
+                            self.initUI(current_level)
 
-                        break
+                            break
+                        elif j.conn[0].id == int(connection.conn[0].id) and j.conn[1].id == int(connection.conn[1].id):
+                            already_exists = Form_already_exists()
+                            already_exists.setGeometry(700, 450, 311, 183)
+                            already_exists.exec()
+
+                elif int(item.id_peretask) == int(i.conn[0].id) and int(item.id) == int(i.conn[1].id):
+                    self.flag_uze_est = 1
+                    already_exists = Form_already_exists()
+                    already_exists.setGeometry(700, 450, 311, 183)
+                    already_exists.exec()
 
             if self.flag_uze_est == 0:
 
@@ -757,8 +859,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
             already_exists.setGeometry(700, 450, 311, 183)
             already_exists.exec()
             #видимо здесь сделать надо обработку
-            print(item.eventPosX)
-            print(item.eventPosY)
+            
 
     def handleSelectIt(self, item):
         print("нажали")
