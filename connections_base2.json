@@ -18,24 +18,6 @@
         "connection_description": "объекты сцены"
     },
     {
-        "connection_id": 1,
-        "connection_type": "additive",
-        "connection_ids": [
-            5,
-            0
-        ],
-        "obj_image": {
-            "type": "circle",
-            "params": {
-                "x": -49.99999999999998,
-                "y": 86.60254037844388,
-                "radius": 100
-            }
-        },
-        "image_flag": 0,
-        "connection_description": "объекты сцены"
-    },
-    {
         "connection_id": 2,
         "connection_type": "additive",
         "connection_ids": [
@@ -45,8 +27,8 @@
         "obj_image": {
             "type": "circle",
             "params": {
-                "x": -50.00000000000004,
-                "y": -86.60254037844383,
+                "x": -100.0,
+                "y": 1.2246467991473532e-14,
                 "radius": 100
             }
         },
@@ -171,12 +153,12 @@
         "obj_image": {
             "type": "circle",
             "params": {
-                "x": 30.000000000000043,
-                "y": 3.602540378443834,
+                "x": 30.0,
+                "y": 0.0,
                 "radius": 30
             }
         },
-        "image_flag": 1,
+        "image_flag": 0,
         "connection_description": "объекты мцп"
     },
     {

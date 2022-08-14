@@ -150,7 +150,7 @@ class MyItem(QtWidgets.QGraphicsItem):
 
     #метод реализации drag and drop
     def mouseMoveEvent(self, e):
-        if self.circle_type != "square":
+        if self.circle_type != "square" and self.circle_type != "grand":
             mime = QtCore.QMimeData() #создается обьект, в котором переносится информация при d"n"d
             text = str(self.id) + "/" + str(self.conn_id)
             mime.setText(str(text)) #id обьекта сохраняется в mime обьект

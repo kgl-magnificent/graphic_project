@@ -479,7 +479,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
             self.btn.move(50, 370)
             self.btn.resize(100, 30)
             self.scene.addWidget(self.btn)
-
+            self.text = ""
             square = MyItem(0, "square", "Переход", 0)
             square.setPos(345, -345)
             self.scene.addItem(square)
@@ -631,17 +631,18 @@ class MyMainWindow(QtWidgets.QMainWindow):
 
 
     def NewLevel(self):
-        print("pe")
 
 
         dial = MyDialog_cur_lev()
         dial.setGeometry(700, 450, 311, 200)
         dial.exec()
         if dial.fromarg:
+            global current_level
             current_level = int(dial.fromarg[0])
 
             self.scene.clear()
             self.initUI(current_level)
+
 
     def CtrlZ(self):
         self.list_of_obj = []
