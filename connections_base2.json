@@ -27,8 +27,8 @@
         "obj_image": {
             "type": "circle",
             "params": {
-                "x": -49.99999999999998,
-                "y": 86.60254037844388,
+                "x": 6.123233995736766e-15,
+                "y": 100.0,
                 "radius": 100
             }
         },
@@ -45,8 +45,8 @@
         "obj_image": {
             "type": "circle",
             "params": {
-                "x": -50.00000000000004,
-                "y": -86.60254037844383,
+                "x": -100.0,
+                "y": 1.2246467991473532e-14,
                 "radius": 100
             }
         },
@@ -232,5 +232,23 @@
         },
         "image_flag": 0,
         "connection_description": "объекты мцп"
+    },
+    {
+        "connection_id": 14,
+        "connection_type": "",
+        "connection_ids": [
+            14,
+            0
+        ],
+        "obj_image": {
+            "type": "circle",
+            "params": {
+                "x": -1.8369701987210297e-14,
+                "y": -100.0,
+                "radius": 100
+            }
+        },
+        "image_flag": 0,
+        "connection_description": ""
     }
 ]

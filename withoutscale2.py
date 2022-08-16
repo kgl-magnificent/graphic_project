@@ -326,7 +326,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
         window_list_obj.label.setText(text)
         window_list_obj.exec()
 
-    #главный метод - рисует круги в оке
+    #главный метод - рисует круги в окне
     def initUI(self, id_big = 0):
 
         if id_big == 0:
@@ -337,7 +337,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
             global positions_big
             global current_level
 
-
+            #определяем радиус
             positions_big = []
             k = 0
             R_Big = 100
@@ -360,21 +360,22 @@ class MyMainWindow(QtWidgets.QMainWindow):
                     y = R_Big * math.sin(i * angle)
 
                     positions_big.append([x, y])
-
+            #рисуем большие круги
             for i in big_circles:
-                print(i)
+                #print(i)
                 i.graph = MyItem(i.conn[0].id, "big", i.conn[0].name, i.id)
-                if i.image_flag == 0:
+                if i.image_flag == 0: #если смещения не было (в ручном режиме)
                     i.graph.setPos(positions_big[k][0], positions_big[k][1])
-                    i.image["params"]["x"] = positions_big[k][0]
+                    i.image["params"]["x"] = positions_big[k][0] #сохраняем координаты в json
                     i.image["params"]["y"] = positions_big[k][1]
                     i.image["params"]["radius"] = R_Big
-                elif i.image_flag == 1:
+                elif i.image_flag == 1: #если смещение было, то вытаскиваем координаты из json
                     i.graph.setPos(i.image["params"]["x"], i.image["params"]["y"])
                     positions_big[k][0] = i.image["params"]["x"]
                     positions_big[k][1] = i.image["params"]["y"]
                 self.scene.addItem(i.graph)
                 k = k + 1
+                #ищем мальнькие круги для большого
                 little_circles = Conn.search_for_id(self.list_of_obj, i.conn[0].id)
                 len_of_little = len(little_circles)
                 positions_add = []
@@ -384,6 +385,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
                 if len_of_little > 1:
                     angle = math.radians((360 / len_of_little))
                     # заполняем список координат используя алгоритм
+                    #формируем позиции
                     for m in range(len_of_little):
                         x = R_little * math.cos(m * angle)
 
@@ -392,22 +394,22 @@ class MyMainWindow(QtWidgets.QMainWindow):
                         positions_add.append([x, y])
 
                 for j in little_circles:
-                    print(j)
+                    #print(j)
+                    #отрисовываем мальникие круги
                     j.graph = MyItem(j.conn[0].id, "little", j.conn[0].name, j.id)
-                    if j.image_flag == 0:
+                    if j.image_flag == 0: #если сдвига не было, то координаты берем из алгоритма
                         j.graph.setPos(positions_add[n][0], positions_add[n][1])
                         j.image["params"]["x"] = positions_add[n][0]
                         j.image["params"]["y"] = positions_add[n][1]
                         j.image["params"]["radius"] = R_little
                     elif j.image_flag == 1:
+                        #если был свиг, то координаты берем из json
                         j.graph.setPos(j.image["params"]["x"], j.image["params"]["y"])
 
 
                     j.graph.setParentItem(i.graph)
                     n = n + 1
 
-            #buffer_back = self.list_of_obj.copy()
-            #self.line.setText(self.text)
             self.line = QtWidgets.QLineEdit()
             self.line.resize(200, 30)
             self.line.move(-150, 370)
@@ -417,6 +419,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
             self.btn.resize(100, 30)
             self.scene.addWidget(self.btn)
             self.text = ""
+            #добавляем квадрат перехода
             square = MyItem(0, "square", "Переход", 0)
             square.setPos(345, -320)
             self.scene.addItem(square)
@@ -432,6 +435,8 @@ class MyMainWindow(QtWidgets.QMainWindow):
             print("big_circles =", big_circles)
             #global positions_big
             tempr2 = Conn.search_for_id2(self.list_of_obj, id_big)
+            #сделал очень большоц круг для наглядности
+
 
             grand_big = MyItem(tempr2.conn[0].id, "grand", tempr2.conn[0].name, tempr2.id)
             grand_big.setPos(0, 0)
@@ -459,9 +464,9 @@ class MyMainWindow(QtWidgets.QMainWindow):
                     y = R_Big * math.sin(i * angle)
 
                     positions_big2.append([x, y])
-
+            #рисуем большой круг
             for i in big_circles:
-                print(i)
+                #print(i)
                 i.graph = MyItem(i.conn[0].id, "big", i.conn[0].name, i.id)
                 if i.image_flag == 0:
                     i.graph.setPos(positions_big2[k][0], positions_big2[k][1])
@@ -488,7 +493,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
                         positions_add2.append([x, y])
 
                 for j in little_circles:
-                    print(j)
+                    #print(j)
                     j.graph = MyItem(j.conn[0].id, "little", j.conn[0].name, j.id)
                     if j.image_flag == 0:
                         j.graph.setPos(positions_add2[n][0], positions_add2[n][1])
@@ -501,6 +506,8 @@ class MyMainWindow(QtWidgets.QMainWindow):
             self.line = QtWidgets.QLineEdit()
             self.line.resize(200, 30)
             self.line.move(-150, 370)
+
+            #формируем надпись с пройденными переходами
             text2 = self.text.split("/")
             if self.text == "":
                 self.text = str(current_level)
@@ -526,20 +533,22 @@ class MyMainWindow(QtWidgets.QMainWindow):
 
             self.newJsonObject()
 
-
+    #запускаем файл, характеризующий круги
     def RightButton(self, item):
         print(item.conn_id)
         for i in self.list_of_obj:
             if i.id == item.conn_id:
-
+                #выполняем проверку перед запуском, если путь не заполнен, то было бы 0
                 if type(i.conn[0].path) != int:
                     os.startfile(i.conn[0].path)
+                #пишем про ошибку пути
                 else:
                     print("path=", i.conn[0].path)
                     bug_in_path = Form_bug_in_path()
                     bug_in_path.setGeometry(700, 450, 311, 183)
                     bug_in_path.exec()
-
+    #метод проверки доступности пути
+    #
     def BtnClicked(self):
         text = self.line.text()
         #проверка на то, что чисто не одно
@@ -550,26 +559,25 @@ class MyMainWindow(QtWidgets.QMainWindow):
             for j in range(len_list):
                 flag = 0
                 for i in self.list_of_obj:
-
+                    #сравниваем полученный путь со списком связей
                     if int(text_list[j]) == int(i.conn[1].id) and int(text_list[j + 1]) == int(i.conn[0].id):
                         list_result.append(1)
                         print("есть совпадение")
                         break
-
+            #выводим сообщение о возможности такого пути
             if len(list_result) == len_list:
                 path_is_possible = From_path_is_possible()
                 path_is_possible.setGeometry(700, 450, 311, 183)
                 path_is_possible.exec()
+            #выводим сообщение что такой путь не возможен
             else:
                 path_is_inpossible = From_path_is_inpossible()
                 path_is_inpossible.setGeometry(700, 450, 311, 183)
                 path_is_inpossible.exec()
 
 
-
+    #метод, который обеспечивает переход на заданный уровень вложенности
     def NewLevel(self):
-
-
         dial = MyDialog_cur_lev()
         dial.setGeometry(700, 450, 311, 200)
         dial.exec()
@@ -580,14 +588,15 @@ class MyMainWindow(QtWidgets.QMainWindow):
             self.scene.clear()
             self.initUI(current_level)
 
-
+    #метод обеспечивает работу CtrlZ комбинации
     def CtrlZ(self):
+        #обеспечивается пктем возвращения списка связей в предыдущее положение
         self.list_of_obj = []
         self.list_of_obj = self.buffer_back
-        print("buffer_back", self.buffer_back)
         self.scene.clear()
         self.initUI(current_level)
 
+    #при изменении количесва объектов (создание нового, удаление) происходит изменение базы JSON
     def newJsonObject(self):
         print("new Json object")
 
@@ -627,20 +636,18 @@ class MyMainWindow(QtWidgets.QMainWindow):
 
             data_objects = json.dump(data, file_conn, ensure_ascii=False, indent=4)
 
-    #отрисовываем большой желтый круг на сцене
+    #метод обработки добавления нового большого желтого круга на сцену
     def createNewBigCiecle(self, item):
+        #копируемп текущую базу для возможности отмены с помощью комбинации CtrlZ
         self.buffer_back = self.list_of_obj.copy()
         list_of_args = item
-
+        #если объект dnd из-вне (файл из проводника переносим на сцену)
         if list_of_args[0].startswith("file"):
-            #print(item.split("/"))
             path = list_of_args[0][8:]
-            print(path)
-            # item.id2 = item.id2.split("/")[-1]
             name = list_of_args[0].split("/")[
                 -1]  # убираем полный абсолютный путь, оставляем только название файла
 
-            # проблема все таки здесь
+            # создаем новый объект
             dial = MyDialog_big()
             dial.setGeometry(700, 450, 311, 250)
             dial.exec()
@@ -653,7 +660,6 @@ class MyMainWindow(QtWidgets.QMainWindow):
         else:
 
             self.flag_uze_est = 0
-            print("вот это вот в item:", list_of_args[0])
             #проверка есть ли уже такой круг на сцене
             temp_circle = Conn.search_in_objbase(int(list_of_args[0].split("/")[0]))
             temp_scene = Conn.search_in_objbase(0)
@@ -661,13 +667,10 @@ class MyMainWindow(QtWidgets.QMainWindow):
             for i in self.list_of_obj:
                 if i.conn[0] == temp_circle and i.conn[1] == temp_scene:
 
-
+                    #флаг выполнения условия
                     self.flag_uze_est = 1
-                    # already_exists = Form_already_exists()
-                    # already_exists.setGeometry(700, 450, 311, 183)
-                    # already_exists.exec()
-
-                    #обеспечиваеет сдвиг большого круга
+                    #обеспечивает сдвиг большого круга
+                    #данные нового местоположения записываются в структуру и выставляется флаг отрисовки по координатам
                     i.image["params"]["x"] = list_of_args[1].x()
                     i.image["params"]["y"] = list_of_args[1].y()
                     i.image_flag = 1
@@ -677,7 +680,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
 
             if self.flag_uze_est == 0:
 
-                # здесь сделать окно, с полями ввода
+                # эта ветка отрабатывает случай, если зеленый круг перенести на сцену
                 dial = MyDialog_big()
                 dial.setGeometry(700, 450, 311, 250)
                 dial.exec()
@@ -689,7 +692,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
                 self.scene.clear()
                 self.initUI(current_level)  # вызываем перерисовку ui
 
-    #
+    #метод обработки нажания клавиши del
     def delObj(self, item):
         print(item.conn_id)
 
@@ -718,7 +721,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
             print(item.id_peretask.split("/"))
             item.name = item.id_peretask.split("/")[-1] #убираем полный абсолютный путь, оставляем только название файла
             item.id_peretask = len(self.list_of_obj) #присваиваем новому обьекту id
-
+            print("работает эта ветка")
             #проблема все таки здесь
             dial = MyDialog_big()
             dial.setGeometry(700, 450, 311, 250)

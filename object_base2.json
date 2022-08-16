@@ -82,5 +82,11 @@
         "obj_name": "МЦП-15-5",
         "obj_description": "Изделие ГВМ100/6-410 ЮФКВ.469555.268",
         "path": 0
+    },
+    {
+        "obj_id": 14,
+        "obj_name": "my_windows",
+        "obj_description": "",
+        "path": "C:/Users/User/Documents/GitHub/graphic_project/my_windows"
     }
 ]
