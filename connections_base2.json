@@ -9,12 +9,12 @@
         "obj_image": {
             "type": "circle",
             "params": {
-                "x": -102.0,
-                "y": -66.0,
+                "x": 100.0,
+                "y": 0.0,
                 "radius": 100
             }
         },
-        "image_flag": 1,
+        "image_flag": 0,
         "connection_description": "объекты сцены"
     },
     {
@@ -27,12 +27,12 @@
         "obj_image": {
             "type": "circle",
             "params": {
-                "x": -238.0,
-                "y": 44.0,
+                "x": -49.99999999999998,
+                "y": 86.60254037844388,
                 "radius": 100
             }
         },
-        "image_flag": 1,
+        "image_flag": 0,
         "connection_description": "объекты сцены"
     },
     {
@@ -45,12 +45,12 @@
         "obj_image": {
             "type": "circle",
             "params": {
-                "x": -213.0,
-                "y": -168.0,
+                "x": -50.00000000000004,
+                "y": -86.60254037844383,
                 "radius": 100
             }
         },
-        "image_flag": 1,
+        "image_flag": 0,
         "connection_description": "объекты сцены"
     },
     {
@@ -135,8 +135,8 @@
         "obj_image": {
             "type": "circle",
             "params": {
-                "x": 9.270509831248424,
-                "y": 28.531695488854606,
+                "x": -14.999999999999993,
+                "y": 25.98076211353316,
                 "radius": 30
             }
         },
@@ -153,8 +153,8 @@
         "obj_image": {
             "type": "circle",
             "params": {
-                "x": -24.27050983124842,
-                "y": 17.633557568774197,
+                "x": -15.000000000000014,
+                "y": -25.980762113533153,
                 "radius": 30
             }
         },
@@ -232,41 +232,5 @@
         },
         "image_flag": 0,
         "connection_description": "объекты мцп"
-    },
-    {
-        "connection_id": 14,
-        "connection_type": "",
-        "connection_ids": [
-            10,
-            5
-        ],
-        "obj_image": {
-            "type": "circle",
-            "params": {
-                "x": -24.270509831248425,
-                "y": -17.63355756877419,
-                "radius": 30
-            }
-        },
-        "image_flag": 0,
-        "connection_description": ""
-    },
-    {
-        "connection_id": 15,
-        "connection_type": "",
-        "connection_ids": [
-            3,
-            5
-        ],
-        "obj_image": {
-            "type": "circle",
-            "params": {
-                "x": 9.270509831248416,
-                "y": -28.53169548885461,
-                "radius": 30
-            }
-        },
-        "image_flag": 0,
-        "connection_description": ""
     }
 ]
