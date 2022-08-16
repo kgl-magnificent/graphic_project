@@ -8,14 +8,19 @@ from path_is_possible import  Ui_Form_Path
 from path_is_inpossible import  Ui_Form_Path2
 from bug_in_path import Ui_Form_bug
 from mydialog_window_current_level import Ui_MyDialog_cur_lev
+from list_obj import list_objs
+#from graph_view import MyGraphicsView
+from globals import positions_big, positions_big2, list_of_obj_from_json, current_level, new_id
 
 
 
-positions_big = []
-positions_big2 = []
-list_of_obj_from_json = [] #справочник всех известных объектов
-current_level = 0 #текущий большой объект
-new_id = 0
+# positions_big = []
+# positions_big2 = []
+#
+# list_of_obj_from_json = [] #справочник всех известных объектов
+# current_level = 0 #текущий большой объект
+# new_id = 0
+
 
 class MyGraphicsView(QtWidgets.QGraphicsView):
     def __init__(self, *args):
@@ -95,6 +100,12 @@ class MyGraphicsView(QtWidgets.QGraphicsView):
         else:
             super(MyGraphicsView, self).keyPressEvent(event)
 
+
+class list_objts(list_objs, QtWidgets.QDialog):
+     def __init__(self):
+        super(list_objts, self).__init__()
+        self.setupUi(self)
+        self.setWindowTitle("список объектов")
 
 class Form_bug_in_path(Ui_Form_bug, QtWidgets.QDialog):
     def __init__(self):
@@ -387,7 +398,30 @@ class MyMainWindow(QtWidgets.QMainWindow):
         self.view.resize(800, 800)
         self.view.setScene(self.scene)
 
+        self.menuFile = QtWidgets.QMenu("&File")
+
+        self.actOpen = QtWidgets.QAction(self)
+        self.actOpen.setText("&Список объектов")
+
+        self.actOpen.triggered.connect(self.print_list_objs)
+        #self.actOpen.hovered.connect(self.on_hovered)
+        self.menuFile.addAction(self.actOpen)
+        self.actMenuFile = self.menuBar().addMenu(self.menuFile)
+
         self.show()
+
+    def print_list_objs(self):
+        print("тут будет список")
+
+        window_list_obj = list_objts()
+        window_list_obj.setGeometry(650, 350, 400, 400)
+
+        text = ""
+        for i in list_of_obj_from_json:
+            text = text + "id = " + str(i.id) + " name: " + str(i.name) + "\n"
+        #window_list_obj.lineEdit_type.setText(text)
+        window_list_obj.label.setText(text)
+        window_list_obj.exec()
 
 
     def initUI(self, id_big = 0):
@@ -481,7 +515,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
             self.scene.addWidget(self.btn)
             self.text = ""
             square = MyItem(0, "square", "Переход", 0)
-            square.setPos(345, -345)
+            square.setPos(345, -320)
             self.scene.addItem(square)
 
 
@@ -581,7 +615,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
             self.btn.clicked.connect(self.BtnClicked)
 
             square = MyItem(0, "square", "Переход", 0)
-            square.setPos(345, -345)
+            square.setPos(345, -320)
             self.scene.addItem(square)
 
 
