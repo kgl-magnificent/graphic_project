@@ -1,15 +1,10 @@
 from PyQt5 import QtCore, QtWidgets, QtGui
 import sys, time, math, codecs, json, copy, os
 from MyItem import MyItem
-from mydialog_window import Ui_MyDialog
-from already_exists import Ui_Form
-from dialog_with_obj import Ui_Form2
-from path_is_possible import  Ui_Form_Path
-from path_is_inpossible import  Ui_Form_Path2
-from bug_in_path import Ui_Form_bug
-from mydialog_window_current_level import Ui_MyDialog_cur_lev
-from list_obj import list_objs
-#from graph_view import MyGraphicsView
+from window_classes import list_objts, Form_bug_in_path, Form_already_exists,\
+    From_path_is_possible, From_path_is_inpossible, MyDialog_big, MyDialog, MyDialog_cur_lev
+
+
 from globals import positions_big, positions_big2, list_of_obj_from_json, current_level, new_id
 
 
@@ -101,105 +96,6 @@ class MyGraphicsView(QtWidgets.QGraphicsView):
             super(MyGraphicsView, self).keyPressEvent(event)
 
 
-class list_objts(list_objs, QtWidgets.QDialog):
-     def __init__(self):
-        super(list_objts, self).__init__()
-        self.setupUi(self)
-        self.setWindowTitle("список объектов")
-
-class Form_bug_in_path(Ui_Form_bug, QtWidgets.QDialog):
-    def __init__(self):
-        super(Form_bug_in_path, self).__init__()
-        self.setupUi(self)
-        self.setWindowTitle("Предупреждение!")
-
-class Form_already_exists(Ui_Form, QtWidgets.QDialog):
-    def __init__(self):
-        super(Form_already_exists, self).__init__()
-        self.setupUi(self)
-        self.setWindowTitle("Предупреждение!")
-
-class From_path_is_possible(Ui_Form_Path, QtWidgets.QDialog):
-    def __init__(self):
-        super(From_path_is_possible, self).__init__()
-        self.setupUi(self)
-        self.setWindowTitle("Успешно!")
-
-class From_path_is_inpossible(Ui_Form_Path2, QtWidgets.QDialog):
-    def __init__(self):
-        super(From_path_is_inpossible, self).__init__()
-        self.setupUi(self)
-        self.setWindowTitle("Предупреждение!")
-
-class MyDialog_big(Ui_Form2, QtWidgets.QDialog):
-    def __init__(self):
-        super(Ui_Form2, self).__init__()
-        self.setupUi(self)
-        self.setWindowTitle("Введите данные о связи")
-        self.fromarg = []
-        self.pushButton.clicked.connect(self.OK)
-        self.pushButton_2.clicked.connect(self.Cancel)
-
-
-    def OK(self):
-        self.fromarg = []
-        name_type = self.lineEdit.text()
-        name_descr = self.lineEdit_2.text()
-        obj_descr = self.lineEdit_3.text()
-        self.fromarg.append(name_type)
-        self.fromarg.append(name_descr)
-        self.fromarg.append(obj_descr)
-        self.close()
-
-
-    def Cancel(self):
-        self.close()
-
-class MyDialog(Ui_MyDialog,  QtWidgets.QDialog):
-    def __init__(self):
-        super(MyDialog, self).__init__()
-        self.setupUi(self)
-        self.setWindowTitle("Введите данные о связи")
-        self.fromarg = []
-        #6 buttons
-        self.pushButton_ok.clicked.connect(self.OK)
-        self.pushButton_cancel.clicked.connect(self.Cancel)
-
-
-    def OK(self):
-        self.fromarg = []
-        name_type = self.lineEdit_type.text()
-        name_descr = self.lineEdit_desc.text()
-        self.fromarg.append(name_type)
-        self.fromarg.append(name_descr)
-        self.close()
-
-
-    def Cancel(self):
-        self.close()
-
-class MyDialog_cur_lev(Ui_MyDialog_cur_lev,  QtWidgets.QDialog):
-    def __init__(self):
-        super(MyDialog_cur_lev, self).__init__()
-        self.setupUi(self)
-        self.setWindowTitle("Введите ID")
-        self.fromarg = []
-        #6 buttons
-        self.pushButton_ok.clicked.connect(self.OK)
-        self.pushButton_cancel.clicked.connect(self.Cancel)
-
-
-    def OK(self):
-        self.fromarg = []
-        name_type = self.lineEdit_type.text()
-
-        self.fromarg.append(name_type)
-
-        self.close()
-
-
-    def Cancel(self):
-        self.close()
 
 class DataObject:
 
@@ -369,8 +265,8 @@ class MyMainWindow(QtWidgets.QMainWindow):
         self.buffer_back = []
         self.initUI(current_level)
         self.scene.setSceneRect(-400, -400, 800, 800)
-        self.view = QtWidgets.QGraphicsView()
-        self.setCentralWidget(self.view)
+        #self.view = QtWidgets.QGraphicsView()
+        #self.setCentralWidget(self.view)
 
         #пробрасывем сигналы
         self.scene.selectedIt.connect(self.handleSelectIt)
@@ -380,8 +276,6 @@ class MyMainWindow(QtWidgets.QMainWindow):
         self.scene.CtrlZpressed.connect(self.CtrlZ)
         self.scene.RightButtonClicked.connect(self.RightButton)
         self.scene.NewLevel.connect(self.NewLevel)
-
-
 
 
 
