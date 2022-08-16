@@ -5,50 +5,51 @@ from window_classes import list_objts, Form_bug_in_path, Form_already_exists,\
     From_path_is_possible, From_path_is_inpossible, MyDialog_big, MyDialog, MyDialog_cur_lev
 
 
-from globals import positions_big, positions_big2, list_of_obj_from_json, current_level, new_id
+#from globals import positions_big, positions_big2, list_of_obj_from_json, current_level, new_id
 
 
 
-# positions_big = []
-# positions_big2 = []
-#
-# list_of_obj_from_json = [] #справочник всех известных объектов
-# current_level = 0 #текущий большой объект
-# new_id = 0
+positions_big = []
+positions_big2 = []
 
+list_of_obj_from_json = [] #справочник всех известных объектов
+current_level = 0 #текущий большой объект
+new_id = 0
 
+#кастомный класс view
 class MyGraphicsView(QtWidgets.QGraphicsView):
     def __init__(self, *args):
 
         super().__init__(*args)
         # self.setAcceptDrops(True)
 
-
+    #использется для реализации возможности моздания новых кругов на сцене
     def dragMoveEvent(self, event):
-
-        temp2 = self.mapToScene(event.pos()) #тут сделать проверку, почитать про itemAt как раз
-        flag_vhocdeniya = 0
-        #print(positions_big)
-        #print(len(positions_big))
-        if current_level == 0:
+        #определяем место нахождения зажатого круга на сцене
+        temp2 = self.mapToScene(event.pos())
+        flag_vhocdeniya = 0 #флаг проверки выполнения условия
+        if current_level == 0: #проверяем, какой объект ведущий: 0 - Сцена
+            #граничные условия: positions_big = [] гругов на сцене нет; positions_big != [[0, 0], []] - на сцене один кркг
             if positions_big != [] and positions_big != [[0, 0], []]:
+                #выполняем проверку место нахождения нахождения круга: ЕСЛИ ОН НАД ДРУГИМ КРУГОМ ТО ПЕРЕХОДИМ В МЕТОДЫ MYITEM
                 for i in positions_big:
 
                     if int(i[0]-50) < int(temp2.x()) and int(i[0]+50) > int(temp2.x()) and int(i[1]-50) < int(temp2.y()) and int(i[1]+50) > int(temp2.y()):
 
                         super(MyGraphicsView, self).dragMoveEvent(event)
                         break
-
+            #если круг один
             elif positions_big == [[0, 0], []]:
-
+                #выполняем проверку место нахождения нахождения круга: ЕСЛИ ОН НАД ДРУГИМ КРУГОМ ТО ПЕРЕХОДИМ В МЕТОДЫ MYITEM
                 if int(positions_big[0][0] - 50) < int(temp2.x()) and int(positions_big[0][0] + 50) > int(temp2.x()) and int(positions_big[0][1] - 50) < int(
                     temp2.y()) and int(positions_big[0][1] + 50) > int(temp2.y()):
                     super(MyGraphicsView, self).dragMoveEvent(event)
 
         else:
+            #выполняем проверку место нахождения нахождения круга: ЕСЛИ ОН НАД ДРУГИМ КРУГОМ ТО ПЕРЕХОДИМ В МЕТОДЫ MYITEM
             if temp2.x() > -200 and temp2.y() > -200 and temp2.x() < 200 and temp2.y() < 200:
                 super(MyGraphicsView, self).dragMoveEvent(event)
-
+        #это сделано для того, если ни одно из условий не подошло, то есть super'ы не сработали, вызвался бы метод drop event
         if flag_vhocdeniya == 0:
             flag_vhocdeniya = 0
 
@@ -57,48 +58,53 @@ class MyGraphicsView(QtWidgets.QGraphicsView):
     def dropEvent(self, event):
         temp2 = self.mapToScene(event.pos())
         flag_v_kruge = 0
-
+        #проверка текущего уровня: 0 - сцена
         if current_level == 0:
             print("тут дейсвительно пусто!")
+            #граничные условия: positions_big = [] гругов на сцене нет; positions_big != [[0, 0], []] - на сцене один кркг
             if positions_big != [] and positions_big != [[0, 0], []]:
                 for i in positions_big:
-
+                    #выполняем проверку место отпускания круга: ЕСЛИ ОН НАД ДРУГИМ КРУГОМ ТО ПЕРЕХОДИМ В МЕТОДЫ MYITEM
                     if int(i[0]-50) < int(temp2.x()) and int(i[0]+50) > int(temp2.x()) and int(i[1]-50) < int(temp2.y()) and int(i[1]+50) > int(temp2.y()):
-
+                        #если отпустили над другим кругом, то обрабатывается в классе MyItem
                         super(MyGraphicsView, self).dropEvent(event)
                         flag_v_kruge = 1
                         break
-
+            #если круг один
             elif positions_big == [[0, 0], []]:
-
+                #выполняем проверку место отпускания круга: ЕСЛИ ОН НАД ДРУГИМ КРУГОМ ТО ПЕРЕХОДИМ В МЕТОДЫ MYITEM
                 if int(positions_big[0][0] - 50) < int(temp2.x()) and int(positions_big[0][0] + 50) > int(temp2.x()) and int(positions_big[0][1] - 50) < int(
                     temp2.y()) and int(positions_big[0][1] + 50) > int(temp2.y()):
+                     #если отпустили над другим кругом, то обрабатывается в классе MyItem
                     super(MyGraphicsView, self).dropEvent(event)
                     flag_v_kruge = 1
 
         else:
+            #если сцена - не главный объект
             if temp2.x() > -200 and temp2.y() > -200 and temp2.x() < 200 and temp2.y() < 200:
+                #обработка в MyItem
                 super(MyGraphicsView, self).dropEvent(event)
                 flag_v_kruge = 1
-
+        #если отпустили круг не над дркгим кругом, то происходит создание большого круга на сцене
         if flag_v_kruge == 0:
             list_with_data = []
             list_with_data.append(event.mimeData().text())
             positions = self.mapToScene(event.pos())
             list_with_data.append(positions)
             self.scene().newBigCircle.emit(list_with_data)
-
+    #обработка нажатия Ctrl_Z
     def keyPressEvent(self, event):
         if event.key() == (QtCore.Qt.Key_Control and QtCore.Qt.Key_Z):
-            print("нажатие")
+            #если нажато Ctrl_Z вызываем сигнал
             self.scene().CtrlZpressed.emit(self)
         else:
+            #если не Ctrl_Z, то ничего не делаем
             super(MyGraphicsView, self).keyPressEvent(event)
 
 
 
 class DataObject:
-
+    #создаем класс для хранения данных об объектах
     def __init__(self, id, name, descript, path = 0):
         self.id = id
         self.name = name
@@ -115,7 +121,7 @@ class DataObject:
 
 
 class Conn:
-
+    #создаем класс для хранения данных о связях
     def __init__(self, id, type, conn,image, flag, descr):
         self.id = id
         self.type = type
@@ -129,7 +135,7 @@ class Conn:
     def __repr__(self):
         return f'{self.id}, {self.conn}'
         #return f' id = {self.id}, conn = {self.conn}'
-
+    #функция поиска объекта по id (если оббъектов несколько)
     @staticmethod
     def search_for_id(list_obj, id):
         list_result = []
@@ -141,7 +147,7 @@ class Conn:
 
         return list_result
 
-
+    #функция поиска объекта по id (если объект один)
     @staticmethod
     def search_for_id2(list_obj, id):
         for tempr in list_obj:
@@ -150,69 +156,71 @@ class Conn:
                 return tempr
 
 
-
+    #добавляем связь если нет новых объеков
     @staticmethod
     def add_conn(list_obj, id_big, id_small, type, descr):
 
         global new_id
-
+        #находим данных о связываемых объектах
         for i in list_of_obj_from_json:
             if i.id == id_small:
                 id_small = i
                 print("что то сделали")
                 break
-
+        #находим данных о связываемых объектах
         for j in list_of_obj_from_json:
             if j.id == id_big:
                 id_big = j
                 print("что то снова сделали")
                 break
-
+        #создаем связь
         list_obj.append(Conn(new_id+1, type, [id_small, id_big], {"type": "circle", "params": {"x": 0, "y": 0, "radius":100} }, 0, descr))
-        new_id = new_id + 1
+        new_id = new_id + 1 #обновили текущий id в базе данных связи
 
     @staticmethod
+    #добавляем связь если есть новый объект
     def add_conn2(list_obj, id_big, name, type, descr, desc_obj, path = 0):
 
         global new_id
 
-        #id_small = DataObject(Conn.search_maximum(list_obj), name, desc_obj)
+        #создаем объект
         id_small = DataObject(len(list_of_obj_from_json), name, desc_obj, path)
         flag_srabotalo = 0
-        print("id_small", id_small)
 
-        if flag_srabotalo == 0:
-            for j in list_of_obj_from_json:
-                if j.id == id_big:
-                    id_big = j
-                    print("что то снова сделали2")
-                    flag_srabotalo = 1
-                    break
-        if flag_srabotalo == 0:
-            print("все не так")
+
+        #ищем второй связываемый объект в базе
+        for j in list_of_obj_from_json:
+            if j.id == id_big:
+                id_big = j
+
+
+                break
+        #добавляем объект в базу
         list_of_obj_from_json.append(id_small)
+        #добавляем связь в базу
         list_obj.append(Conn(new_id + 1, type, [id_small, id_big],
                              {"type": "circle", "params": {"x": 0, "y": 0, "radius": 100}}, 0, descr))
         new_id = new_id + 1
 
 
     @staticmethod
+    #функция добавления большого круга на сцену
     def add_conn_big_circle_on_scene(list_obj, id_big, name, type, descr, desc_obj, path):
         global list_of_obj_from_json, new_id
-        print("add_conn_big_circle_on_scene")
-        print(list_of_obj_from_json)
+        #создаем объект
         id_small = DataObject(len(list_of_obj_from_json), name, desc_obj, path) #создаем объект
-
+        #ищим объект сцены
         for j in list_of_obj_from_json: #ищем сцену
             if int(j.id) == 0:
                 id_big = j
                 print("что то снова сделали3")
                 break
-
+        #добавляем объект в базу
         list_of_obj_from_json.append(id_small) #добавляем элемент
+        #добавляем связь в базу
         list_obj.append(Conn(new_id + 1, type, [id_small, id_big],
                              {"type": "circle", "params": {"x": 0, "y": 0, "radius": 100}}, 0, descr))
-        print("list_obj", list_obj)
+
         new_id = new_id + 1
 
 
@@ -227,6 +235,7 @@ class Conn:
                 local_max = i.conn[1].id
         return local_max+1
 
+    #функция поиска связи в базе
     @staticmethod
     def search_in_objbase(id):
         for i in list_of_obj_from_json:
@@ -234,6 +243,7 @@ class Conn:
                 return i
 
 
+#кастомизировали класс сцены
 class Scene(QtWidgets.QGraphicsScene):
     NameItem = 1
     #пробросили сигналы
@@ -251,7 +261,7 @@ class Scene(QtWidgets.QGraphicsScene):
         self.counterItems = 0
 
 
-
+#шлавный класс ОКНО
 class MyMainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, list_of_obj):
@@ -303,9 +313,8 @@ class MyMainWindow(QtWidgets.QMainWindow):
         self.actMenuFile = self.menuBar().addMenu(self.menuFile)
 
         self.show()
-
+    #метод отрисовки данных об объектах принадатии файл->список обхектов
     def print_list_objs(self):
-        print("тут будет список")
 
         window_list_obj = list_objts()
         window_list_obj.setGeometry(650, 350, 400, 400)
@@ -317,7 +326,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
         window_list_obj.label.setText(text)
         window_list_obj.exec()
 
-
+    #главный метод - рисует круги в оке
     def initUI(self, id_big = 0):
 
         if id_big == 0:
