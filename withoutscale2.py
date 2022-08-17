@@ -719,9 +719,11 @@ class MyMainWindow(QtWidgets.QMainWindow):
             print("файл!")
             path = item.id_peretask[8:]
             print(item.id_peretask.split("/"))
+            print(item.id_peretask)
             item.name = item.id_peretask.split("/")[-1] #убираем полный абсолютный путь, оставляем только название файла
             item.id_peretask = len(self.list_of_obj) #присваиваем новому обьекту id
             print("работает эта ветка")
+
             #проблема все таки здесь
             dial = MyDialog_big()
             dial.setGeometry(700, 450, 311, 250)

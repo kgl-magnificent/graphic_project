@@ -85,8 +85,20 @@
     },
     {
         "obj_id": 14,
-        "obj_name": "my_windows",
+        "obj_name": "graph_view.py",
         "obj_description": "",
-        "path": "C:/Users/User/Documents/GitHub/graphic_project/my_windows"
+        "path": "C:/Users/User/Documents/GitHub/graphic_project/graph_view.py"
+    },
+    {
+        "obj_id": 15,
+        "obj_name": "connections_base.json",
+        "obj_description": "",
+        "path": "C:/Users/User/Documents/GitHub/graphic_project/connections_base.json"
+    },
+    {
+        "obj_id": 16,
+        "obj_name": "connections_base.json",
+        "obj_description": "",
+        "path": "C:/Users/User/Documents/GitHub/graphic_project/connections_base.json"
     }
 ]

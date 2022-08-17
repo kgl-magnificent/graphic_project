@@ -152,7 +152,7 @@ class MyItem(QtWidgets.QGraphicsItem):
     def mouseMoveEvent(self, e):
         if self.circle_type != "square" and self.circle_type != "grand":
             mime = QtCore.QMimeData() #создается обьект, в котором переносится информация при d"n"d
-            text = str(self.id) + "/" + str(self.conn_id)
+            text = "*" + str(self.id) + "/" + str(self.conn_id)
             mime.setText(str(text)) #id обьекта сохраняется в mime обьект
             #mime.setUrls([QtCore.QUrl("http://google.ru/")])
             #mime.setData('application/x-qt-windows-mime;value="name"', bytearray(str(self.name), encoding="utf-8"))
@@ -191,9 +191,13 @@ class MyItem(QtWidgets.QGraphicsItem):
     def dropEvent(self, event: 'QGraphicsSceneDragDropEvent') -> None:
         print(event.mimeData().formats())
         print("dropEvent")
-        text = (event.mimeData().text()).split("/")
-        self.id_peretask = text[0]
-        self.conn_id_old = text[1]
+        if event.mimeData().text().startswith("*"):
+            text = (event.mimeData().text())[1:].split("/")
+            self.id_peretask = text[0]
+            self.conn_id_old = text[1]
+        else:
+            self.id_peretask = (event.mimeData().text())
+            self.conn_id_old = 0
         self.eventPos = self.mapToItem(self, event.pos())
         #self.eventPosY = self.mapToItem(self, event.pos().y())
 
