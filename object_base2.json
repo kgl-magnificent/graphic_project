@@ -82,23 +82,5 @@
         "obj_name": "МЦП-15-5",
         "obj_description": "Изделие ГВМ100/6-410 ЮФКВ.469555.268",
         "path": 0
-    },
-    {
-        "obj_id": 14,
-        "obj_name": "graph_view.py",
-        "obj_description": "",
-        "path": "C:/Users/User/Documents/GitHub/graphic_project/graph_view.py"
-    },
-    {
-        "obj_id": 15,
-        "obj_name": "connections_base.json",
-        "obj_description": "",
-        "path": "C:/Users/User/Documents/GitHub/graphic_project/connections_base.json"
-    },
-    {
-        "obj_id": 16,
-        "obj_name": "connections_base.json",
-        "obj_description": "",
-        "path": "C:/Users/User/Documents/GitHub/graphic_project/connections_base.json"
     }
 ]

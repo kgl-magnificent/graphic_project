@@ -1,8 +1,9 @@
 from PyQt5 import QtCore, QtWidgets, QtGui
 import sys, time, math, codecs, json, copy, os
 from MyItem import MyItem
+from datetime import date
 from window_classes import list_objts, Form_bug_in_path, Form_already_exists,\
-    From_path_is_possible, From_path_is_inpossible, MyDialog_big, MyDialog, MyDialog_cur_lev
+    From_path_is_possible, From_path_is_inpossible, MyDialog_big, MyDialog, MyDialog_cur_lev, RightButtonMenu
 
 
 #from globals import positions_big, positions_big2, list_of_obj_from_json, current_level, new_id
@@ -122,7 +123,7 @@ class DataObject:
 
 class Conn:
     #создаем класс для хранения данных о связях
-    def __init__(self, id, type, conn,image, flag, descr):
+    def __init__(self, id, type, conn,image, flag, descr, modify_date):
         self.id = id
         self.type = type
         self.conn = conn
@@ -130,6 +131,7 @@ class Conn:
         self.image_flag = flag
         self.descr = descr
         self.graph = []
+        self.modify_date = modify_date
 
 
     def __repr__(self):
@@ -174,7 +176,7 @@ class Conn:
                 print("что то снова сделали")
                 break
         #создаем связь
-        list_obj.append(Conn(new_id+1, type, [id_small, id_big], {"type": "circle", "params": {"x": 0, "y": 0, "radius":100} }, 0, descr))
+        list_obj.append(Conn(new_id+1, type, [id_small, id_big], {"type": "circle", "params": {"x": 0, "y": 0, "radius":100} }, 0, descr, date.today()))
         new_id = new_id + 1 #обновили текущий id в базе данных связи
 
     @staticmethod
@@ -199,7 +201,7 @@ class Conn:
         list_of_obj_from_json.append(id_small)
         #добавляем связь в базу
         list_obj.append(Conn(new_id + 1, type, [id_small, id_big],
-                             {"type": "circle", "params": {"x": 0, "y": 0, "radius": 100}}, 0, descr))
+                             {"type": "circle", "params": {"x": 0, "y": 0, "radius": 100}}, 0, descr, date.today()))
         new_id = new_id + 1
 
 
@@ -219,7 +221,7 @@ class Conn:
         list_of_obj_from_json.append(id_small) #добавляем элемент
         #добавляем связь в базу
         list_obj.append(Conn(new_id + 1, type, [id_small, id_big],
-                             {"type": "circle", "params": {"x": 0, "y": 0, "radius": 100}}, 0, descr))
+                             {"type": "circle", "params": {"x": 0, "y": 0, "radius": 100}}, 0, descr, date.today()))
 
         new_id = new_id + 1
 
@@ -264,13 +266,13 @@ class Scene(QtWidgets.QGraphicsScene):
 #шлавный класс ОКНО
 class MyMainWindow(QtWidgets.QMainWindow):
 
-    def __init__(self, list_of_obj):
+    def __init__(self, list_of_obj, settings):
         super().__init__()
         self.list_of_obj = list_of_obj
         self.message = " "
         self.text = ""
         self.flag_uze_est = 0
-
+        self.settings = settings
         self.scene = Scene()
         self.buffer_back = []
         self.initUI(current_level)
@@ -535,18 +537,41 @@ class MyMainWindow(QtWidgets.QMainWindow):
 
     #запускаем файл, характеризующий круги
     def RightButton(self, item):
-        print(item.conn_id)
-        for i in self.list_of_obj:
-            if i.id == item.conn_id:
-                #выполняем проверку перед запуском, если путь не заполнен, то было бы 0
-                if type(i.conn[0].path) != int:
-                    os.startfile(i.conn[0].path)
-                #пишем про ошибку пути
-                else:
-                    print("path=", i.conn[0].path)
-                    bug_in_path = Form_bug_in_path()
-                    bug_in_path.setGeometry(700, 450, 311, 183)
-                    bug_in_path.exec()
+        window = RightButtonMenu()
+        window.setGeometry(700, 450, 311, 200)
+        window.exec()
+        if window.fromarg == 1:
+        #print(item.conn_id)
+            for i in self.list_of_obj:
+                if i.id == item.conn_id:
+                    #выполняем проверку перед запуском, если путь не заполнен, то было бы 0
+                    if type(i.conn[0].path) != int:
+                        os.startfile(i.conn[0].path)
+                    #пишем про ошибку пути
+                    else:
+                        print("path=", i.conn[0].path)
+                        bug_in_path = Form_bug_in_path()
+                        bug_in_path.setGeometry(700, 450, 311, 183)
+                        bug_in_path.exec()
+        elif window.fromarg == 2:
+            for i in self.list_of_obj:
+                if i.id == int(item.conn_id):
+                    print(item.id)
+
+
+                    window_list_obj = list_objts()
+                    window_list_obj.setGeometry(650, 350, 400, 400)
+                    window_list_obj.setWindowTitle("Свойства связи")
+                    text = "id связи: " + str(i.id) + "\n" \
+                    + "тип связи: " + str(i.type) + "\n" \
+                    + "связанные объекты: [" + str(i.conn[0].name) + ", " + str(i.conn[1].name) + "]"+ "\n" \
+                    + "описание связи: " + str(i.descr) + "\n" \
+                    + "дата изменения: " + str(i.modify_date)
+
+
+        #window_list_obj.lineEdit_type.setText(text)
+                    window_list_obj.label.setText(text)
+                    window_list_obj.exec()
     #метод проверки доступности пути
     #
     def BtnClicked(self):
@@ -599,42 +624,47 @@ class MyMainWindow(QtWidgets.QMainWindow):
     #при изменении количесва объектов (создание нового, удаление) происходит изменение базы JSON
     def newJsonObject(self):
         print("new Json object")
-
-        with open("object_base2.json", 'w', encoding="utf8") as file_objects:
+        if self.settings.contains("data/objects"):
+            print("связь")
+            with open(self.settings.value("data/objects"), 'w', encoding="utf8") as file_objects:
+        #with open("object_base2.json", 'w', encoding="utf8") as file_objects:
             # считали данные из открвтого файла
+                data = []
+                #формируем словарь для json
+                for obj in list_of_obj_from_json:
+                    data2 = {}
+                    data2["obj_id"] = obj.id
+                    data2["obj_name"] = obj.name
+
+                    data2["obj_description"] = obj.descript
+                    data2["path"] = obj.path
+
+                    data.append(data2)
+
+                # сохраняем данные в json
+                data_objects = json.dump(data, file_objects, ensure_ascii=False, indent=4)
             data = []
-            #формируем словарь для json
-            for obj in list_of_obj_from_json:
-                data2 = {}
-                data2["obj_id"] = obj.id
-                data2["obj_name"] = obj.name
-
-                data2["obj_description"] = obj.descript
-                data2["path"] = obj.path
-
-                data.append(data2)
-
-            # сохраняем данные в json
-            data_objects = json.dump(data, file_objects, ensure_ascii=False, indent=4)
-        data = []
 
         #формируем новый json файл со связями
-        with open("connections_base2.json", 'w', encoding="utf8") as file_conn:
-            data = []
+        if self.settings.contains("data/conns"):
+            with open(self.settings.value("data/conns"), "w", encoding="utf8") as file_connections:
+        #with open("connections_base2.json", 'w', encoding="utf8") as file_connections:
+                data = []
 
-            for conns in self.list_of_obj:
+                for conns in self.list_of_obj:
 
-                data2 = {}
-                data2["connection_id"] = conns.id
-                data2["connection_type"] = conns.type
-                data2["connection_ids"] = [conns.conn[0].id, conns.conn[1].id]
-                data2["obj_image"] = conns.image
-                data2["image_flag"] = conns.image_flag
-                data2["connection_description"] = conns.descr
+                    data2 = {}
+                    data2["connection_id"] = conns.id
+                    data2["connection_type"] = conns.type
+                    data2["connection_ids"] = [conns.conn[0].id, conns.conn[1].id]
+                    data2["obj_image"] = conns.image
+                    data2["image_flag"] = conns.image_flag
+                    data2["connection_description"] = conns.descr
+                    data2["modify-date"] = str(conns.modify_date)
 
-                data.append(data2)
+                    data.append(data2)
 
-            data_objects = json.dump(data, file_conn, ensure_ascii=False, indent=4)
+                data_objects = json.dump(data, file_connections, ensure_ascii=False, indent=4)
 
     #метод обработки добавления нового большого желтого круга на сцену
     def createNewBigCiecle(self, item):
@@ -661,7 +691,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
 
             self.flag_uze_est = 0
             #проверка есть ли уже такой круг на сцене
-            temp_circle = Conn.search_in_objbase(int(list_of_args[0].split("/")[0]))
+            temp_circle = Conn.search_in_objbase(int(list_of_args[0][1:].split("/")[0]))
             temp_scene = Conn.search_in_objbase(0)
 
             for i in self.list_of_obj:
@@ -684,7 +714,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
                 dial = MyDialog_big()
                 dial.setGeometry(700, 450, 311, 250)
                 dial.exec()
-                temp_circle = Conn.search_in_objbase(int(list_of_args[0].split("/")[0]))
+                temp_circle = Conn.search_in_objbase(int(list_of_args[0][1:].split("/")[0]))
                 if dial.fromarg:
                     Conn.add_conn_big_circle_on_scene(self.list_of_obj, 0, temp_circle.name, dial.fromarg[0],
                                                       dial.fromarg[1],  dial.fromarg[2], temp_circle.path)  # добавляем обьект в словарь
@@ -826,20 +856,39 @@ def main(arguments):
     list_of_conns = []
     global list_of_obj_from_json, new_id
     list_of_obj_from_json = []
-    with open("object_base.json", encoding="utf8") as file_objects:
-        # считали данные из открвтого файла
-        data_objects = json.load(file_objects)
-        for i in data_objects:
-            data = DataObject(i["obj_id"], i["obj_name"], i["obj_description"], i["path"])
-            list_of_obj_from_json.append(data)
+    settings = QtCore.QSettings("RC Module", "ConnSearch")
+    settings.beginGroup("data")
+    settings.setValue("objects", "object_base2.json")
+    settings.setValue("conns", "connections_base2.json")
+    settings.endGroup()
 
-    with open("connections_base.json", encoding="utf8") as file_connections:
-        # считали данные из открвтого файла
-        data_conn = json.load(file_connections)
-        for i in data_conn:
-            data = Conn(i["connection_id"], i["connection_type"], i["connection_ids"], i["obj_image"], i["image_flag"], i["connection_description"])
-            list_of_conns.append(data)
+    if settings.contains("data/objects"):
 
+
+        with open(settings.value("data/objects"), encoding="utf8") as file_objects:
+            # считали данные из открвтого файла
+            data_objects = json.load(file_objects)
+            for i in data_objects:
+                data = DataObject(i["obj_id"], i["obj_name"], i["obj_description"], i["path"])
+                list_of_obj_from_json.append(data)
+    else:
+        print("ошибка")
+
+    if settings.contains("data/conns"):
+        with open(settings.value("data/conns"), encoding="utf8") as file_connections:
+            # считали данные из открвтого файла
+
+            data_conn = json.load(file_connections)
+            for i in data_conn:
+                if i["modify-date"] == 0:
+                    data = Conn(i["connection_id"], i["connection_type"], i["connection_ids"], i["obj_image"], i["image_flag"],
+                        i["connection_description"], date.today())
+                else:
+                    data = Conn(i["connection_id"], i["connection_type"], i["connection_ids"], i["obj_image"], i["image_flag"],
+                        i["connection_description"], i["modify-date"])
+                list_of_conns.append(data)
+    else:
+        print("ошибка")
     for i in list_of_conns:
         for j in list_of_obj_from_json:
             if i.conn[0] == j.id:
@@ -851,7 +900,7 @@ def main(arguments):
 
     # print(list_of_obj)
     new_id = len(list_of_conns)
-    window = MyMainWindow(list_of_conns)
+    window = MyMainWindow(list_of_conns, settings)
     window.setWindowTitle("Connecton search")
     #window.setGeometry(450, 200, 600, 600)
     window.setGeometry(450, 200, 800, 800)
