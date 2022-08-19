@@ -370,11 +370,13 @@ class MyMainWindow(QtWidgets.QMainWindow):
                     i.graph.setPos(positions_big[k][0], positions_big[k][1])
                     i.image["params"]["x"] = positions_big[k][0] #сохраняем координаты в json
                     i.image["params"]["y"] = positions_big[k][1]
-                    i.image["params"]["radius"] = R_Big
+                    i.image["params"]["radius"] = 100
                 elif i.image_flag == 1: #если смещение было, то вытаскиваем координаты из json
                     i.graph.setPos(i.image["params"]["x"], i.image["params"]["y"])
                     positions_big[k][0] = i.image["params"]["x"]
                     positions_big[k][1] = i.image["params"]["y"]
+
+
                 self.scene.addItem(i.graph)
                 k = k + 1
                 #ищем мальнькие круги для большого
@@ -403,10 +405,20 @@ class MyMainWindow(QtWidgets.QMainWindow):
                         j.graph.setPos(positions_add[n][0], positions_add[n][1])
                         j.image["params"]["x"] = positions_add[n][0]
                         j.image["params"]["y"] = positions_add[n][1]
-                        j.image["params"]["radius"] = R_little
+                        j.image["params"]["radius"] = 30
                     elif j.image_flag == 1:
                         #если был свиг, то координаты берем из json
-                        j.graph.setPos(j.image["params"]["x"], j.image["params"]["y"])
+                        if j.image["params"]["radius"] == 30:
+                            j.graph.setPos(j.image["params"]["x"], j.image["params"]["y"])
+                        elif j.image["params"]["radius"] == 100:
+
+                            j.graph.setPos(j.image["params"]["x"]/5, j.image["params"]["y"]/5)
+                            positions_add[n][0] = j.image["params"]["x"]/5
+                            positions_add[n][1] = j.image["params"]["y"]/5
+                            j.image["params"]["x"] = j.image["params"]["x"]/5
+                            j.image["params"]["y"] = j.image["params"]["y"]/5
+                            j.image["params"]["radius"] = 30
+
 
 
                     j.graph.setParentItem(i.graph)
@@ -472,10 +484,22 @@ class MyMainWindow(QtWidgets.QMainWindow):
                 i.graph = MyItem(i.conn[0].id, "big", i.conn[0].name, i.id)
                 if i.image_flag == 0:
                     i.graph.setPos(positions_big2[k][0], positions_big2[k][1])
+                    print(11)
+
                 elif i.image_flag == 1:
-                    i.graph.setPos(i.image["params"]["x"], i.image["params"]["y"])
-                    positions_big2[k][0] = i.image["params"]["x"]
-                    positions_big2[k][1] = i.image["params"]["y"]
+                    if i.image["params"]["radius"] == 30:
+                        i.graph.setPos(i.image["params"]["x"]*5, i.image["params"]["y"]*5)
+                        i.image["params"]["x"] = i.image["params"]["x"]*5
+                        i.image["params"]["y"] = i.image["params"]["y"]*5
+                        i.image["params"]["radius"] = 100
+                        positions_big2[k][0] = i.image["params"]["x"]
+                        positions_big2[k][1] = i.image["params"]["y"]
+
+                    if i.image["params"]["radius"] == 100:
+                        i.graph.setPos(i.image["params"]["x"], i.image["params"]["y"])
+                        positions_big2[k][0] = i.image["params"]["x"]
+                        positions_big2[k][1] = i.image["params"]["y"]
+
 
                 i.graph.setParentItem(grand_big)
                 k = k + 1
