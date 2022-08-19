@@ -154,7 +154,7 @@ class Conn:
     def search_for_id2(list_obj, id):
         for tempr in list_obj:
             if tempr.conn[0].id == id:
-                print("что то там такое")
+                #print("что то там такое")
                 return tempr
 
 
@@ -474,8 +474,9 @@ class MyMainWindow(QtWidgets.QMainWindow):
                     i.graph.setPos(positions_big2[k][0], positions_big2[k][1])
                 elif i.image_flag == 1:
                     i.graph.setPos(i.image["params"]["x"], i.image["params"]["y"])
-                    positions_big[k][0] = i.image["params"]["x"]
-                    positions_big[k][1] = i.image["params"]["y"]
+                    positions_big2[k][0] = i.image["params"]["x"]
+                    positions_big2[k][1] = i.image["params"]["y"]
+
                 i.graph.setParentItem(grand_big)
                 k = k + 1
                 little_circles = Conn.search_for_id(self.list_of_obj, i.conn[0].id)
@@ -623,9 +624,9 @@ class MyMainWindow(QtWidgets.QMainWindow):
 
     #при изменении количесва объектов (создание нового, удаление) происходит изменение базы JSON
     def newJsonObject(self):
-        print("new Json object")
+        #print("new Json object")
         if self.settings.contains("data/objects"):
-            print("связь")
+            #print("связь")
             with open(self.settings.value("data/objects"), 'w', encoding="utf8") as file_objects:
         #with open("object_base2.json", 'w', encoding="utf8") as file_objects:
             # считали данные из открвтого файла
@@ -746,13 +747,13 @@ class MyMainWindow(QtWidgets.QMainWindow):
 
         #ЭТО ДОБАВЛЕНИЕ НОВОГО ФАЙЛА
         if item.id_peretask.startswith("file"):
-            print("файл!")
+            #print("файл!")
             path = item.id_peretask[8:]
-            print(item.id_peretask.split("/"))
-            print(item.id_peretask)
+            #print(item.id_peretask.split("/"))
+            #print(item.id_peretask)
             item.name = item.id_peretask.split("/")[-1] #убираем полный абсолютный путь, оставляем только название файла
             item.id_peretask = len(self.list_of_obj) #присваиваем новому обьекту id
-            print("работает эта ветка")
+            #print("работает эта ветка")
 
             #проблема все таки здесь
             dial = MyDialog_big()
@@ -774,13 +775,13 @@ class MyMainWindow(QtWidgets.QMainWindow):
 
 
 
-                print("old= ", item.conn_id_old)
+                #print("old= ", item.conn_id_old)
                 for l in self.list_of_obj:
                     if l.id == int(item.conn_id_old):
                         connection = l
 
-                print("0 =", connection.conn[0].id)
-                print("1 =", connection.conn[1].id)
+                #print("0 =", connection.conn[0].id)
+                #print("1 =", connection.conn[1].id)
 
 
                 if int(item.id_peretask) == int(i.conn[0].id) and int(item.id) == int(i.conn[1].id):
@@ -795,13 +796,16 @@ class MyMainWindow(QtWidgets.QMainWindow):
                     for j in self.list_of_obj:
                         #это смешение если обьект
                         if j.conn[0].id == int(item.id_peretask) and j.conn[1].id == int(item.id) and int(item.id) == int(connection.conn[1].id):
+
                             j.image["params"]["x"] = (item.eventPos.x())
                             j.image["params"]["y"] = (item.eventPos.y())
+                            print("этот флаг")
 
                                 #print(item.eventPosX, item.eventPosY)
                             j.image_flag = 1
                             self.scene.clear()
                             self.initUI(current_level)
+
 
                             break
                         elif j.conn[0].id == int(connection.conn[0].id) and j.conn[1].id == int(connection.conn[1].id):
@@ -858,8 +862,8 @@ def main(arguments):
     list_of_obj_from_json = []
     settings = QtCore.QSettings("RC Module", "ConnSearch")
     settings.beginGroup("data")
-    settings.setValue("objects", "object_base2.json")
-    settings.setValue("conns", "connections_base2.json")
+    settings.setValue("objects", "object_base.json")
+    settings.setValue("conns", "connections_base.json")
     settings.endGroup()
 
     if settings.contains("data/objects"):
