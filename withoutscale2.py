@@ -487,6 +487,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
                     print(11)
 
                 elif i.image_flag == 1:
+                    print("big ", i.image["params"]["radius"])
                     if i.image["params"]["radius"] == 30:
                         i.graph.setPos(i.image["params"]["x"]*5, i.image["params"]["y"]*5)
                         i.image["params"]["x"] = i.image["params"]["x"]*5
@@ -495,11 +496,16 @@ class MyMainWindow(QtWidgets.QMainWindow):
                         positions_big2[k][0] = i.image["params"]["x"]
                         positions_big2[k][1] = i.image["params"]["y"]
 
-                    if i.image["params"]["radius"] == 100:
+                    elif i.image["params"]["radius"] == 100:
                         i.graph.setPos(i.image["params"]["x"], i.image["params"]["y"])
                         positions_big2[k][0] = i.image["params"]["x"]
                         positions_big2[k][1] = i.image["params"]["y"]
 
+                    elif i.image["params"]["radius"] == 31:
+                        i.graph.setPos(i.image["params"]["x"]*5, i.image["params"]["y"]*5)
+                        i.image["params"]["x"] = i.image["params"]["x"]*5
+                        i.image["params"]["y"] = i.image["params"]["y"]*5
+                        i.image["params"]["radius"] = 100
 
                 i.graph.setParentItem(grand_big)
                 k = k + 1
@@ -521,13 +527,22 @@ class MyMainWindow(QtWidgets.QMainWindow):
 
                 for j in little_circles:
                     #print(j)
+                    print("little ", j.image["params"]["radius"])
                     j.graph = MyItem(j.conn[0].id, "little", j.conn[0].name, j.id)
                     if j.image_flag == 0:
                         j.graph.setPos(positions_add2[n][0], positions_add2[n][1])
-
+                        j.image["params"]["radius"] = 31
                         j.graph.setParentItem(i.graph)
                     elif j.image_flag == 1:
-                         j.graph.setPos(j.image["params"]["x"], j.image["params"]["y"])
+                        if j.image["params"]["radius"] == 101 or j.image["params"]["radius"] == 100:
+                            j.graph.setPos(j.image["params"]["x"]/5, j.image["params"]["y"]/5)
+                            j.image["params"]["x"] = j.image["params"]["x"]/5
+                            j.image["params"]["y"] = j.image["params"]["y"]/5
+                            j.graph.setParentItem(i.graph)
+                            j.image["params"]["radius"] = 31
+                        elif j.image["params"]["radius"] == 31:
+                            j.graph.setPos(j.image["params"]["x"], j.image["params"]["y"])
+                            j.graph.setParentItem(i.graph)
                     n = n + 1
 
             self.line = QtWidgets.QLineEdit()
